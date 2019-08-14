@@ -7,6 +7,7 @@ $light-gray-background: #ebeef2
 $mid-gray-background: #dadde0
 
 $democritus: #4a76cb
+$dalton: #25F2F9
 
 body
     display: flex
@@ -94,8 +95,12 @@ nav
             display: block
             transform: translateY(-1px)
     .timeline-node-selected
-        &::before
-            background-color: $democritus
+        &#democritus-node
+            &::before
+                background-color: $democritus
+        &#dalton-node
+            &::before
+                background-color: $dalton
 
 main
     padding-left: 330 + 45px
@@ -181,3 +186,6 @@ article
 .image-container
     box-sizing: border-box
     padding: 30px 30px 0 30px
+
+.article-hidden
+    display: none

@@ -1,0 +1,179 @@
+@import reset
+    
+$off-white-text: #f5f8fc
+$off-black-text: #4a4b4d
+$gray-text: #87898c
+$light-gray-background: #ebeef2
+$mid-gray-background: #dadde0
+
+$democritus: #4a76cb
+
+body
+    display: flex
+
+nav
+    position: fixed
+    display: flex
+    flex-direction: column
+    height: 100%
+    min-width: 330px
+    background-color: $light-gray-background
+
+.nav-header
+    background-color: $mid-gray-background
+    padding: 15px
+    flex-grow: 0
+    img
+        display: block
+        max-width: 200px
+        margin: 0px auto
+
+.nav-body
+    flex-grow: 1
+    padding: 45px
+    display: flex
+    justify-content: flex-end
+    flex-direction: column
+    position: relative
+    &::after
+        content: ""
+        display: block
+        width: 4px
+        background-color: $off-black-text
+        position: absolute
+        top: 60px
+        bottom: 60px
+        left: 62px
+        z-index: -1
+    .timeline-node
+        margin-top: 30px
+        display: flex
+        align-content: center
+        cursor: pointer
+        &::before
+            display: block
+            content: ""
+            width: 30px
+            height: 30px
+            border-radius: 50%
+            border: 4px solid $off-black-text
+            background-color: $light-gray-background
+        &:first-child
+            margin-top: 0px
+            margin-bottom: auto
+        &:nth-child(3)
+            margin-bottom: auto
+    .timeline-node-text
+        margin-left: 15px
+        span
+            font-size: 20px
+            display: block
+            &:first-child
+                font-weight: 600
+            &:last-child
+                color: $gray-text
+    .timeline-note
+        margin-bottom: auto
+        padding: 8px
+        font-weight: 600
+        background-color: $light-gray-background
+        align-self: flex-start
+        transform: rotate(-15deg) translateX(-30%)
+        &::before, &::after
+            display: block
+            height: 4px
+            width: 60%
+            margin: 0 auto
+            content: ""
+            background-color: $off-black-text
+        &::before
+            transform: translateY(-8px) translateX(3px)
+        &::after
+            transform: translateY(8px) translateX(-3px)
+        span
+            display: block
+            transform: translateY(-1px)
+    .timeline-node-selected
+        &::before
+            background-color: $democritus
+
+main
+    padding-left: 330 + 45px
+
+header
+    width: 100%
+    background-color: $democritus
+    margin-left: -45px
+    padding-right: 45px
+    height: 240px
+    position: relative
+    &::before
+        content: ""
+        display: block
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 45px
+        right: 500px
+        background-image: url("../assets/democritusbackground.png")
+        opacity: 0.2
+        background-size: cover
+        background-position: left 45%
+    .article-header-left
+        position: absolute
+        top: 50%
+        left: 45px
+        transform: translateY(-50%)
+        h2, span
+            color: $off-white-text
+        h2
+            font-size: 100px
+            font-weight: 800
+        span
+            font-size: 20px
+            font-weight: 200
+    .article-header-right
+        position: absolute
+        top: 0
+        bottom: 0
+        right: 45px
+        background-color: darken($democritus, 20)
+        h3
+            width: 100%
+            background-color: #5F94FF
+            padding: 15px
+            box-sizing: border-box
+            text-align: center
+            color: $off-white-text
+            font-size: 45px
+            font-weight: 600
+        img
+            margin: 0 45px
+            transform: translateY(30px)
+
+section
+    margin-top: 45px
+    padding-right: 45px
+    h4
+        font-size: 32px
+        margin-bottom: 15px
+    p
+        font-size: 20px
+        line-height: 1.5em
+        margin-top: 30px
+    .article-section-image
+        float: right
+        width: 331px
+        background-color: $light-gray-background
+        margin: 0 0 45px 45px
+        img
+            width: 100%
+        span
+            padding: 15px
+            display: block
+            line-height: 1.5em
+            font-size: 16px
+            text-align: center
+
+article
+    padding-bottom: 45px

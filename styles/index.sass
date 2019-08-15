@@ -7,7 +7,7 @@ $light-gray-background: #ebeef2
 $mid-gray-background: #dadde0
 
 $democritus: #4a76cb
-$dalton: #25F2F9
+$dalton: #4ED4D4
 
 body
     display: flex
@@ -120,8 +120,8 @@ header
         bottom: 0
         left: 45px
         right: 500px
-        background-image: url("../assets/democritusbackground.png")
         opacity: 0.2
+        background-image: url("../assets/democritusbackground.png")
         background-size: cover
         background-position: left 45%
     .article-header-left
@@ -136,12 +136,12 @@ header
             font-weight: 800
         span
             font-size: 20px
-            font-weight: 200
     .article-header-right
         position: absolute
         top: 0
         bottom: 0
         right: 45px
+        width: 331px
         background-color: darken($democritus, 20)
         h3
             width: 100%
@@ -153,8 +153,24 @@ header
             font-size: 45px
             font-weight: 600
         img
-            margin: 0 45px
+            display: block
+            margin: 0 auto
             transform: translateY(30px)
+
+article#dalton-article
+    header
+        background-color: $dalton
+        &::before
+            background-image: url("../assets/daltonbackground.png")
+            background-size: cover
+            background-position: left 45%
+            left: 0
+            right: 45 + 331px
+            opacity: 0.3
+    .article-header-right
+        background-color: darken($dalton, 20)
+        h3
+            background-color: #58F0F0
 
 section
     margin-top: 45px
@@ -166,6 +182,19 @@ section
         font-size: 20px
         line-height: 1.5em
         margin-top: 30px
+    ol
+        margin-top: 30px
+        margin-left: 30px
+        font-size: 20px
+        line-height: 1.5em
+        counter-reset: section-list-counter
+        li
+            counter-increment: section-list-counter
+            &::before
+                content: counter(section-list-counter) ". "
+                width: 30px
+                display: inline-block
+                font-weight: 800
     .article-section-image
         float: right
         width: 331px
@@ -173,6 +202,8 @@ section
         margin: 0 0 45px 45px
         img
             width: 100%
+            &.atom-model
+                max-height: 125px
         span
             padding: 15px
             display: block

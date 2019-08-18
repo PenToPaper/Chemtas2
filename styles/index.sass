@@ -11,6 +11,7 @@ $dalton: #4ED4D4
 $thomson: #57D44E
 $rutherford: #ECF01A
 $bohr: #D4A34A
+$schrodinger: #D4574E
 
 body
     display: flex
@@ -113,6 +114,9 @@ nav
         &#bohr-node
             &::before
                 background-color: $bohr
+        &#schrodinger-node
+            &::before
+                background-color: $schrodinger
 
 main
     padding-left: 330 + 45px
@@ -229,6 +233,21 @@ article#bohr-article
         h3
             background-color: #E8B251
 
+article#schrodinger-article
+    header
+        background-color: $schrodinger
+        &::before
+            background-image: url("../assets/schrodingerbackground.png")
+            background-size: cover
+            background-position: left 45%
+            left: 0
+            right: 45 + 331px
+            opacity: 0.3
+    .article-header-right
+        background-color: darken($schrodinger, 20)
+        h3
+            background-color: #E35D54
+
 section
     margin-top: 45px
     padding-right: 45px
@@ -262,19 +281,21 @@ section
         &.image-container
             box-sizing: border-box
             padding: 30px
-            span
+            span, p
                 margin-top: 15px
                 padding: 0px
         img
             width: 100%
             &.atom-model
                 max-height: 125px
-        span
+        span, p
             padding: 15px
             display: block
             line-height: 1.5em
             font-size: 16px
             text-align: center
+        p
+            text-align: left
         ol
             margin-top: 15px
             margin-left: 0px

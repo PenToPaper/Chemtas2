@@ -10,6 +10,7 @@ $democritus: #4a76cb
 $dalton: #4ED4D4
 $thomson: #57D44E
 $rutherford: #ECF01A
+$bohr: #D4A34A
 
 body
     display: flex
@@ -109,6 +110,9 @@ nav
         &#rutherford-node
             &::before
                 background-color: $rutherford
+        &#bohr-node
+            &::before
+                background-color: $bohr
 
 main
     padding-left: 330 + 45px
@@ -209,6 +213,21 @@ article#rutherford-article
         background-color: darken($rutherford, 20)
         h3
             background-color: #FBFF1C
+
+article#bohr-article
+    header
+        background-color: $bohr
+        &::before
+            background-image: url("../assets/bohrbackground.png")
+            background-size: cover
+            background-position: left 40%
+            left: 0
+            right: 45 + 331px
+            opacity: 0.3
+    .article-header-right
+        background-color: darken($bohr, 20)
+        h3
+            background-color: #E8B251
 
 section
     margin-top: 45px

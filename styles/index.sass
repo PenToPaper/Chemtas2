@@ -9,6 +9,7 @@ $mid-gray-background: #dadde0
 $democritus: #4a76cb
 $dalton: #4ED4D4
 $thomson: #57D44E
+$rutherford: #ECF01A
 
 body
     display: flex
@@ -105,6 +106,9 @@ nav
         &#thomson-node
             &::before
                 background-color: $thomson
+        &#rutherford-node
+            &::before
+                background-color: $rutherford
 
 main
     padding-left: 330 + 45px
@@ -191,6 +195,21 @@ article#thomson-article
         h3
             background-color: #62F058
 
+article#rutherford-article
+    header
+        background-color: $rutherford
+        &::before
+            background-image: url("../assets/thomsonbackground.png")
+            background-size: cover
+            background-position: left 20%
+            left: 0
+            right: 45 + 331px
+            opacity: 0.3
+    .article-header-right
+        background-color: darken($rutherford, 20)
+        h3
+            background-color: #FBFF1C
+
 section
     margin-top: 45px
     padding-right: 45px
@@ -254,3 +273,8 @@ article
 
 strong
     font-weight: 600
+
+.dark-header
+    div
+        h2, span, h3
+            color: $off-black-text

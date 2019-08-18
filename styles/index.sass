@@ -8,6 +8,7 @@ $mid-gray-background: #dadde0
 
 $democritus: #4a76cb
 $dalton: #4ED4D4
+$thomson: #57D44E
 
 body
     display: flex
@@ -101,6 +102,9 @@ nav
         &#dalton-node
             &::before
                 background-color: $dalton
+        &#thomson-node
+            &::before
+                background-color: $thomson
 
 main
     padding-left: 330 + 45px
@@ -172,6 +176,21 @@ article#dalton-article
         h3
             background-color: #58F0F0
 
+article#thomson-article
+    header
+        background-color: $thomson
+        &::before
+            background-image: url("../assets/thomsonbackground.png")
+            background-size: cover
+            background-position: left 15%
+            left: 0
+            right: 45 + 331px
+            opacity: 0.3
+    .article-header-right
+        background-color: darken($thomson, 20)
+        h3
+            background-color: #62F058
+
 section
     margin-top: 45px
     padding-right: 45px
@@ -197,9 +216,17 @@ section
                 font-weight: 800
     .article-section-image
         float: right
+        clear: right
         width: 331px
+        box-sizing: border-box
         background-color: $light-gray-background
         margin: 0 0 45px 45px
+        &.image-container
+            box-sizing: border-box
+            padding: 30px
+            span
+                margin-top: 15px
+                padding: 0px
         img
             width: 100%
             &.atom-model
@@ -210,13 +237,20 @@ section
             line-height: 1.5em
             font-size: 16px
             text-align: center
+        ol
+            margin-top: 15px
+            margin-left: 0px
+            font-size: 16px
+            li
+                &::before
+                    width: 15px
 
 article
     padding-bottom: 45px
 
-.image-container
-    box-sizing: border-box
-    padding: 30px 30px 0 30px
 
 .article-hidden
     display: none
+
+strong
+    font-weight: 600

@@ -1,6 +1,7 @@
 //onload
 document.addEventListener("DOMContentLoaded", function(event) {
     collectionBind(document.getElementsByClassName("timeline-node"), "click", onTimelineNodeClick);
+    let atomAnimation = new AtomAnimation("atom-evolution", "../assets/atomevolution.json");
 });
 
 function collectionBind(collection, listenerType, func) {
@@ -37,4 +38,16 @@ function selectSidebarNode(articleName) {
             sidebarNodes[i].className = sidebarNodes[i].className + " timeline-node-selected";
         }
     }
+}
+
+function AtomAnimation(elementId, jsonLocation) {
+    this.elementId = elementId;
+    this.jsonLocation = jsonLocation;
+    this.animation = bodymovin.loadAnimation({
+        container: document.getElementById(this.elementId),
+        renderer: "svg",
+        loop: true,
+        autoplay: false,
+        path: this.jsonLocation
+    });
 }

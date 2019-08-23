@@ -306,10 +306,25 @@ section
 
 article
     padding-bottom: 45px
+    height: auto
+    header
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out
+        transform: translateY(0)
+        opacity: 1
+    section
+        transition: opacity 0.3s ease-in-out 0.3s
+        opacity: 1
 
 
-.article-hidden
-    display: none
+.article-hidden, .hidden
+    height: 0px
+    padding-bottom: 0px
+    overflow: hidden
+    header
+        transform: translateY(-100%)
+        opacity: 0
+    section
+        opacity: 0
 
 strong
     font-weight: 600

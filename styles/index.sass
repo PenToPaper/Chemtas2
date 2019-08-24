@@ -336,7 +336,6 @@ strong
             color: $off-black-text
 
 #atom-evolution-container
-    background-color: gray
     display: flex
     flex-direction: column
     justify-content: center
@@ -349,7 +348,7 @@ strong
     bottom: 0
     padding-right: 45px
     opacity: 1
-    transition: opacity 0.3s ease-in-out
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out
     &.democritus-animation
         background-color: $democritus
     &.dalton-animation
@@ -360,6 +359,8 @@ strong
         background-color: $rutherford
     &.bohr-animation
         background-color: $bohr
+    &.schrodinger-animation
+        background-color: $schrodinger
     &.hidden
         opacity: 0
     span

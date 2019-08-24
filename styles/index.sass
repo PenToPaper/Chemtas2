@@ -120,6 +120,7 @@ nav
 
 main
     padding-left: 330 + 45px
+    min-height: 100vh
 
 header
     width: 100%
@@ -333,3 +334,37 @@ strong
     div
         h2, span, h3
             color: $off-black-text
+
+#atom-evolution-container
+    background-color: gray
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    height: 100%
+    position: fixed
+    left: 330px
+    right: 0
+    top: 0
+    bottom: 0
+    padding-right: 45px
+    opacity: 1
+    transition: opacity 0.3s ease-in-out
+    &.democritus-animation
+        background-color: $democritus
+    &.dalton-animation
+        background-color: $dalton
+    &.thomson-animation
+        background-color: $thomson
+    &.rutherford-animation
+        background-color: $rutherford
+    &.bohr-animation
+        background-color: $bohr
+    &.hidden
+        opacity: 0
+    span
+        font-size: 100px
+        font-weight: 800
+        margin-bottom: 60px
+    #atom-evolution
+        padding: 0px 45px

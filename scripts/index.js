@@ -221,7 +221,8 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     // Hides the animation, does not remove color as animation happens
     this.hideAnimation = function() {
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
-        animation.className = animation.className + " hidden";
+        var newClassName = animation.className.replace(" hidden", "");
+        animation.className = newClassName + " hidden";
     };
 
     // Event handler for animation complete, cleans up (shows active article + hides animation)

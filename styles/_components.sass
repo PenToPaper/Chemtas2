@@ -1,0 +1,246 @@
+@import vars
+
+/* BODY */
+body
+    display: flex
+
+main
+    padding-left: 330 + 45px
+    min-height: 100vh
+
+strong
+    font-weight: 600
+
+/* NAV */
+nav
+    position: fixed
+    display: flex
+    flex-direction: column
+    height: 100%
+    min-width: 330px
+    background-color: $light-gray-background
+
+.nav-header
+    background-color: $mid-gray-background
+    padding: 15px
+    flex-grow: 0
+    img
+        display: block
+        max-width: 200px
+        margin: 0px auto
+
+.nav-body
+    flex-grow: 1
+    padding: 45px
+    display: flex
+    justify-content: flex-end
+    flex-direction: column
+    position: relative
+    &::after
+        content: ""
+        display: block
+        width: 4px
+        background-color: $off-black-text
+        position: absolute
+        top: 60px
+        bottom: 60px
+        left: 62px
+        z-index: -1
+    .timeline-node
+        margin-top: 30px
+        display: flex
+        align-content: center
+        cursor: pointer
+        &::before
+            display: block
+            content: ""
+            width: 30px
+            height: 30px
+            border-radius: 50%
+            border: 4px solid $off-black-text
+            background-color: $light-gray-background
+        &:first-child
+            margin-top: 0px
+            margin-bottom: auto
+        &:nth-child(3)
+            margin-bottom: auto
+    .timeline-node-text
+        margin-left: 15px
+        span
+            font-size: 20px
+            display: block
+            &:first-child
+                font-weight: 600
+            &:last-child
+                color: $gray-text
+    .timeline-note
+        margin-bottom: auto
+        padding: 8px
+        font-weight: 600
+        background-color: $light-gray-background
+        align-self: flex-start
+        transform: rotate(-15deg) translateX(-30%)
+        &::before, &::after
+            display: block
+            height: 4px
+            width: 60%
+            margin: 0 auto
+            content: ""
+            background-color: $off-black-text
+        &::before
+            transform: translateY(-8px) translateX(3px)
+        &::after
+            transform: translateY(8px) translateX(-3px)
+        span
+            display: block
+            transform: translateY(-1px)
+    
+
+/* ARTICLES */
+
+header
+    width: 100%
+    background-color: $democritus
+    margin-left: -45px
+    padding-right: 45px
+    height: 240px
+    position: relative
+    &::before
+        content: ""
+        display: block
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 45px
+        right: 500px
+        opacity: 0.2
+        background-image: url("../assets/democritusbackground.png")
+        background-size: cover
+        background-position: left 45%
+    .article-header-left
+        position: absolute
+        top: 50%
+        left: 45px
+        transform: translateY(-50%)
+        h2, span
+            color: $off-white-text
+        h2
+            font-size: 100px
+            font-weight: 800
+        span
+            font-size: 20px
+    .article-header-right
+        position: absolute
+        top: 0
+        bottom: 0
+        right: 45px
+        width: 331px
+        background-color: darken($democritus, 20)
+        h3
+            width: 100%
+            background-color: #5F94FF
+            padding: 15px
+            box-sizing: border-box
+            text-align: center
+            color: $off-white-text
+            font-size: 45px
+            font-weight: 600
+        img
+            display: block
+            margin: 0 auto
+            transform: translateY(30px)
+
+.dark-header
+    div
+        h2, span, h3
+            color: $off-black-text
+
+section
+    margin-top: 45px
+    padding-right: 45px
+    h4
+        font-size: 32px
+        margin-bottom: 15px
+    p
+        font-size: 20px
+        line-height: 1.5em
+        margin-top: 30px
+    ol
+        margin-top: 30px
+        margin-left: 30px
+        font-size: 20px
+        line-height: 1.5em
+        counter-reset: section-list-counter
+        li
+            counter-increment: section-list-counter
+            &::before
+                content: counter(section-list-counter) ". "
+                width: 30px
+                display: inline-block
+                font-weight: 800
+    .article-section-image
+        float: right
+        clear: right
+        width: 331px
+        box-sizing: border-box
+        background-color: $light-gray-background
+        margin: 0 0 45px 45px
+        &.image-container
+            box-sizing: border-box
+            padding: 30px
+            span, p
+                margin-top: 15px
+                padding: 0px
+        img
+            width: 100%
+            &.atom-model
+                max-height: 125px
+        span, p
+            padding: 15px
+            display: block
+            line-height: 1.5em
+            font-size: 16px
+            text-align: center
+        p
+            text-align: left
+        ol
+            margin-top: 15px
+            margin-left: 0px
+            font-size: 16px
+            li
+                &::before
+                    width: 15px
+
+article
+    padding-bottom: 45px
+    height: auto
+    header
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out
+        transform: translateY(0)
+        opacity: 1
+    section
+        transition: opacity 0.3s ease-in-out 0.3s
+        opacity: 1
+    
+
+/* ANIMATION */
+#atom-evolution-container
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    height: 100%
+    position: fixed
+    left: 330px
+    right: 0
+    top: 0
+    bottom: 0
+    padding-right: 45px
+    opacity: 1
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out
+    span
+        font-size: 100px
+        font-weight: 800
+        margin-bottom: 60px
+    #atom-evolution
+        padding: 0px 45px

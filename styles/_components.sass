@@ -136,7 +136,10 @@ header
         right: 45px
         width: 331px
         background-color: darken($democritus, 20)
+        display: flex
+        flex-direction: column
         h3
+            flex-shrink: 0
             width: 100%
             background-color: #5F94FF
             padding: 15px
@@ -145,10 +148,19 @@ header
             color: $off-white-text
             font-size: 45px
             font-weight: 600
-        img
-            display: block
-            margin: 0 auto
-            transform: translateY(30px)
+            margin-bottom: 15px
+        div
+            flex-grow: 1
+            position: relative
+            margin-bottom: 15px
+            img
+                position: absolute
+                top: 0
+                bottom: 0
+                left: 0
+                right: 0
+                margin: auto
+                max-height: 100%
 
 .dark-header
     div

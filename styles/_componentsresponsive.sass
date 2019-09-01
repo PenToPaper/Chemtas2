@@ -32,9 +32,7 @@
         span
             font-size: 60px
 
-    header
-        height: 180px
-    
+    // Nav
     nav
         min-width: 225px
         .nav-body
@@ -44,32 +42,27 @@
         .nav-header
             padding-left: 30px
             padding-right: 30px
+
+    // Header
+    header
+        height: 180px
+        &::before
+            right: 232 + 45px
+        .article-header-right
+            width: 232px
     
+    // Main
     main
         padding-left: 225 + 45px
 
     #atom-evolution-container
         left: 225px
-    
-    header
-        &::before
-            right: 232 + 45px
-        .article-header-right
-            width: 232px
 
     section .article-section-image
         width: 232px
 
 @media screen and (max-width: 1100px)
-    .nav-header
-        display: none
-
-    .logo-mark-container
-        display: block
-        img
-            transition: transform 0.3s ease-in-out
-            transform: translateX(73px)
-
+    // Nav
     nav
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out
         width: 100px
@@ -77,34 +70,43 @@
         box-shadow: none
         .nav-header
             padding-top: 8px
+            display: none
             padding-bottom: 8px
         .nav-body
             transition: transform 0.3s ease-in-out
             transform: translateX(-100%)
-    
-    body.mini-nav-open nav
-        transform: translateX(0px)
-        box-shadow: 25px 0px 25px rgba(0, 0, 0, 0.2)
-        .nav-body
-            transform: translateX(0px)
-        .logo-mark-container img
-            transform: translateX(0px)
-    
-    body::after
-        position: fixed
-        top: 0
-        bottom: 0
-        left: 0
-        right: 0
-        z-index: -1
-        content: ""
-        transition: background-color 0.3s ease-in-out
-        background-color: rgba(60, 66, 77, 0)
 
-    body.mini-nav-open::after
-        z-index: 5
-        background-color: rgba(60, 66, 77, 0.35)
+    nav .logo-mark-container
+        display: block
+        img
+            transition: transform 0.3s ease-in-out
+            transform: translateX(73px)
+
+    // Body + Mini-nav-open
+    body
+        &.mini-nav-open
+            &::after
+                z-index: 5
+                background-color: rgba(60, 66, 77, 0.35)
+            nav
+                transform: translateX(0px)
+                box-shadow: 25px 0px 25px rgba(0, 0, 0, 0.2)
+                .nav-body
+                    transform: translateX(0px)
+                .logo-mark-container img
+                    transform: translateX(0px)
+        &::after
+            position: fixed
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            z-index: -1
+            content: ""
+            transition: background-color 0.3s ease-in-out
+            background-color: rgba(60, 66, 77, 0)
     
+    // Main content
     main
         padding-left: 225 + 45 - 145px
     
@@ -112,6 +114,7 @@
         left: 225 - 145px
 
 @media screen and (max-width: 800px)
+    // Font sizes
     header
         .article-header-left
             h2
@@ -123,28 +126,9 @@
         span
             font-size: 42px
 
+    // Nav
     nav
         transform: translateX(-100%)
-
-    main
-        padding-left: 45px
-    
-    #atom-evolution-container
-        left: 0px
-        padding-right: 0px
-    
-    header .article-header-right
-        display: none
-    
-    header::before
-        right: 0px
-    
-    header
-        height: 120px
-        .logo-mark-container
-            display: block
-
-    nav
         box-shadow: none
         transform: translateX(100%)
         right: 0
@@ -154,12 +138,29 @@
                 transform: rotate(-15deg) translateX(-27%)
         .logo-mark-container img
             transform: none
-        
+
     body.mini-nav-open nav
         box-shadow: -25px 0px 25px rgba(0, 0, 0, 0.2)
 
     .mini-discovery-date
         display: block
+
+    // Main
+    header
+        height: 120px
+        &::before
+            right: 0px
+        .logo-mark-container
+            display: block
+        .article-header-right
+            display: none
+
+    main
+        padding-left: 45px
+    
+    #atom-evolution-container
+        left: 0px
+        padding-right: 0px
     
     section p:first-of-type
         margin-top: 15px
@@ -167,8 +168,8 @@
     section .article-section-image
         margin-top: 0px
 
-// Look into changing order of images, perhaps using flexbox ONLY within above media query
 @media screen and (max-width: 700px)
+    // Header
     header
         padding-right: 15px
         margin-left: -15px
@@ -176,6 +177,8 @@
             left: 15px
         .logo-mark-container
             right: 15px
+    
+    // Main
     main
         padding-left: 15px
     
@@ -202,6 +205,7 @@
             float: none
         h4
             margin-bottom: -8px
+
     .mini-discovery-date
         margin: 0px auto 15px
 
@@ -210,6 +214,7 @@
         display: none
 
 @media screen and (max-height: 505px)
+    // Nav
     nav
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, width 0.3s ease-in-out
         max-width: 400px
@@ -226,7 +231,11 @@
                 margin-top: 30px
         &::after
             content: none
+        .timeline-node-text
+            span
+                font-size: 16px
 
+    // Main
     main
         padding-left: 445px
 
@@ -234,14 +243,13 @@
         left: 400px
         padding-left: 45px
 
-    .nav-body
-        .timeline-node-text
-            span
-                font-size: 16px
 
 @media screen and (max-height: 505px) and (max-width: 1100px)
+    // Nav
     body.mini-nav-open nav
         width: 400px
+
+    // Main
     main
         padding-left: 125px
     
@@ -250,15 +258,19 @@
         padding-left: 45px
 
 @media screen and (max-height: 505px) and (max-width: 800px)
+    // Main
     main
         padding-left: 45px
+
     #atom-evolution-container
         left: 0px
         padding-left: 0px
 
 @media screen and (max-height: 505px) and (max-width: 700px)
+    // Main
     main
         padding-left: 15px
+        
     #atom-evolution-container
         left: 0px
         padding-left: 0px

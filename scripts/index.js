@@ -157,6 +157,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     // Dynamic
     this.activeScientist = activeScientist;
     this.miniNavOpen = false;
+    this.miniNavLockTimeout = null;
 
     // Binds controls on sidebar
     this.bindScientistButtons = function() {
@@ -177,15 +178,18 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
     };
 
+    // Binds this.handleMiniNavOpen to the mini logo being clicked
     this.bindMiniNavOpen = function() {
         collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen.bind(this));
     };
 
+    // Toggles the hidden nav menu
     this.handleMiniNavOpen = function(event, element) {
         this.miniNavOpen = !this.miniNavOpen;
         this.handleMiniNavOpenUpdate();
     };
 
+    // Updates the mini nav class in the dom. Called after this.miniNavOpen is updated
     this.handleMiniNavOpenUpdate = function() {
         var body = document.getElementsByTagName("body");
         if (body.length === 0) {
@@ -197,6 +201,25 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
         } else {
             body[0].className = "";
         }
+    };
+
+    // Locks the nav from transitioning when
+    this.handleNavLock = function() {
+        var nav = document.getElementsByTagName("nav");
+        if (nav.length === 0) {
+            return false;
+        }
+        nav[0].className = "animation-locked";
+        this.miniNavLockTimeout = setTimeout(this.handleNavUnlock.bind(this), 500);
+    };
+
+    // Unlocks the nav, called after 500ms of not resizing window
+    this.handleNavUnlock = function() {
+        var nav = document.getElementsByTagName("nav");
+        if (nav.length === 0) {
+            return false;
+        }
+        nav[0].className = "";
     };
 
     // Handles a point in the animation where a scientist's model transitions into another scientists's model.
@@ -269,5 +292,6 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
         this.atomAnimation.init(this.activeScientist, this.handleAnimationDone.bind(this));
         this.bindScientistButtons();
         this.bindMiniNavOpen();
+        window.addEventListener("resize", this.handleNavLock.bind(this));
     };
 }

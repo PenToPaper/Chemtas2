@@ -13,6 +13,7 @@ strong
 
 /* NAV */
 nav
+    z-index: 10
     position: fixed
     display: flex
     flex-direction: column
@@ -28,6 +29,11 @@ nav
         display: block
         max-width: 200px
         margin: 0px auto
+    
+.logo-mark-container
+    display: none
+    img
+        max-height: 56px
 
 .nav-body
     flex-grow: 1
@@ -111,8 +117,8 @@ header
         position: absolute
         top: 0
         bottom: 0
-        left: 45px
-        right: 500px
+        left: 0px
+        right: 331 + 45px
         opacity: 0.2
         background-image: url("../assets/democritusbackground.png")
         background-size: cover
@@ -161,6 +167,16 @@ header
                 right: 0
                 margin: auto
                 max-height: 100%
+    .logo-mark-container
+        position: absolute
+        right: 45px
+        top: 50%
+        transform: translateY(-50%)
+        width: 56px
+        height: 56px
+        display: none
+        img
+            transform: none
 
 .dark-header
     div
@@ -196,7 +212,9 @@ section
         width: 331px
         box-sizing: border-box
         background-color: $light-gray-background
-        margin: 0 0 45px 45px
+        margin: 15px 0 45px 45px
+        position: relative
+        z-index: -2
         &.image-container
             box-sizing: border-box
             padding: 30px
@@ -222,6 +240,27 @@ section
             li
                 &::before
                     width: 15px
+
+.mini-discovery-date
+    display: none
+    background-color: $light-gray-background
+    padding: 15px
+    margin-bottom: 45px
+    margin: 45px auto 45px
+    width: 100%
+    box-sizing: border-box
+    position: relative
+    z-index: -2
+    span
+        font-size: 32px
+        font-weight: 600
+        text-align: center
+        display: block
+        margin-bottom: 8px
+    img
+        max-width: 300px
+        display: block
+        margin: 0 auto
 
 article
     padding-bottom: 45px

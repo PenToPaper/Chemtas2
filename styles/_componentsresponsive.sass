@@ -1,3 +1,264 @@
+@media screen and (max-width: 1375px)
+    // Adjust font sizes
+    .nav-body
+        .timeline-node-text
+            span
+                font-size: 16px
+    
+    header
+        .article-header-left
+            h2
+                font-size: 60px
+            span
+                font-size: 18px
+        .article-header-right
+            h3
+                font-size: 32px
+
+    section
+        h4
+            font-size: 24px
+        p
+            font-size: 16px
+        ol
+            font-size: 16px
+        .article-section-image
+            span, p
+                font-size: 14px
+            ol
+                font-size: 14px
+
+    #atom-evolution-container
+        span
+            font-size: 60px
+
+    header
+        height: 180px
+    
+    nav
+        min-width: 225px
+        .nav-body
+            padding: 30px
+            &::after
+                left: 47px
+        .nav-header
+            padding-left: 30px
+            padding-right: 30px
+    
+    main
+        padding-left: 225 + 45px
+
+    #atom-evolution-container
+        left: 225px
+    
+    header
+        &::before
+            right: 232 + 45px
+        .article-header-right
+            width: 232px
+
+    section .article-section-image
+        width: 232px
+
+@media screen and (max-width: 1100px)
+    .nav-header
+        display: none
+
+    .logo-mark-container
+        display: block
+        img
+            transition: transform 0.3s ease-in-out
+            transform: translateX(73px)
+
+    nav
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out
+        width: 100px
+        transform: translateX(-145px)
+        box-shadow: none
+        .nav-header
+            padding-top: 8px
+            padding-bottom: 8px
+        .nav-body
+            transition: transform 0.3s ease-in-out
+            transform: translateX(-100%)
+    
+    body.mini-nav-open nav
+        transform: translateX(0px)
+        box-shadow: 25px 0px 25px rgba(0, 0, 0, 0.2)
+        .nav-body
+            transform: translateX(0px)
+        .logo-mark-container img
+            transform: translateX(0px)
+    
+    body::after
+        position: fixed
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        z-index: -1
+        content: ""
+        transition: background-color 0.3s ease-in-out
+        background-color: rgba(60, 66, 77, 0)
+
+    body.mini-nav-open::after
+        z-index: 5
+        background-color: rgba(60, 66, 77, 0.35)
+    
+    main
+        padding-left: 225 + 45 - 145px
+    
+    #atom-evolution-container
+        left: 225 - 145px
+
+@media screen and (max-width: 800px)
+    header
+        .article-header-left
+            h2
+                font-size: 42px
+            span
+                font-size: 16px
+
+    #atom-evolution-container
+        span
+            font-size: 42px
+
+    nav
+        transform: translateX(-100%)
+
+    main
+        padding-left: 45px
+    
+    #atom-evolution-container
+        left: 0px
+        padding-right: 0px
+    
+    header .article-header-right
+        display: none
+    
+    header::before
+        right: 0px
+    
+    header
+        height: 120px
+        .logo-mark-container
+            display: block
+
+    nav
+        box-shadow: none
+        transform: translateX(100%)
+        right: 0
+        .nav-body
+            transform: translateX(0px)
+            .timeline-note
+                transform: rotate(-15deg) translateX(-27%)
+        .logo-mark-container img
+            transform: none
+        
+    body.mini-nav-open nav
+        box-shadow: -25px 0px 25px rgba(0, 0, 0, 0.2)
+
+    .mini-discovery-date
+        display: block
+    
+    section p:first-of-type
+        margin-top: 15px
+    
+    section .article-section-image
+        margin-top: 0px
+
+// Look into changing order of images, perhaps using flexbox ONLY within above media query
+@media screen and (max-width: 700px)
+    header
+        padding-right: 15px
+        margin-left: -15px
+        .article-header-left
+            left: 15px
+        .logo-mark-container
+            right: 15px
+    main
+        padding-left: 15px
+    
+    section
+        &:last-child
+            margin-bottom: 0px
+        margin-bottom: 45px
+        margin-top: 15px
+        padding-right: 15px
+        display: flex
+        flex-direction: column
+        p
+            &:first-of-type
+                order: 3
+            order: 5
+            margin-top: 15px
+        ol
+            order: 5
+        .article-section-image
+            order: 4
+            margin: 15px auto 0px
+            width: 100%
+            max-width: 450px
+            float: none
+        h4
+            margin-bottom: -8px
+    .mini-discovery-date
+        margin: 0px auto 15px
+
 @media screen and (max-height: 620px)
     .timeline-note
         display: none
+
+@media screen and (max-height: 505px)
+    nav
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, width 0.3s ease-in-out
+        max-width: 400px
+
+    .nav-body
+        flex-direction: row
+        flex-wrap: wrap
+        .timeline-node
+            width: 50%
+            &:nth-child(3)
+                margin-bottom: 0px
+            &:first-child
+                margin: 0px
+                margin-top: 30px
+        &::after
+            content: none
+
+    main
+        padding-left: 445px
+
+    #atom-evolution-container
+        left: 400px
+        padding-left: 45px
+
+    .nav-body
+        .timeline-node-text
+            span
+                font-size: 16px
+
+@media screen and (max-height: 505px) and (max-width: 1100px)
+    body.mini-nav-open nav
+        width: 400px
+    main
+        padding-left: 125px
+    
+    #atom-evolution-container
+        left: 80px
+        padding-left: 45px
+
+@media screen and (max-height: 505px) and (max-width: 800px)
+    main
+        padding-left: 45px
+    #atom-evolution-container
+        left: 0px
+        padding-left: 0px
+
+@media screen and (max-height: 505px) and (max-width: 700px)
+    main
+        padding-left: 15px
+    #atom-evolution-container
+        left: 0px
+        padding-left: 0px

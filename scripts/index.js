@@ -156,6 +156,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
 
     // Dynamic
     this.activeScientist = activeScientist;
+    this.miniNavOpen = false;
 
     // Binds controls on sidebar
     this.bindScientistButtons = function() {
@@ -167,10 +168,35 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
         var prevActiveScientist = this.activeScientist.slice();
         this.activeScientist = element.getAttribute("data-article");
 
+        this.miniNavOpen = false;
+        this.handleMiniNavOpenUpdate();
+
         this.changeActiveScientist(this.activeScientist);
         this.hideAllArticles();
         this.showAnimation();
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
+    };
+
+    this.bindMiniNavOpen = function() {
+        collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen.bind(this));
+    };
+
+    this.handleMiniNavOpen = function(event, element) {
+        this.miniNavOpen = !this.miniNavOpen;
+        this.handleMiniNavOpenUpdate();
+    };
+
+    this.handleMiniNavOpenUpdate = function() {
+        var body = document.getElementsByTagName("body");
+        if (body.length === 0) {
+            return false;
+        }
+
+        if (this.miniNavOpen) {
+            body[0].className = "mini-nav-open";
+        } else {
+            body[0].className = "";
+        }
     };
 
     // Handles a point in the animation where a scientist's model transitions into another scientists's model.
@@ -242,5 +268,6 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
         this.showAnimation();
         this.atomAnimation.init(this.activeScientist, this.handleAnimationDone.bind(this));
         this.bindScientistButtons();
+        this.bindMiniNavOpen();
     };
 }

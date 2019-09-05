@@ -44,8 +44,9 @@ function AtomAnimation(elementId, jsonLocation) {
     // Dynamic
     // If animation is being played, the currently displayed model. If none being played, false
     this.playing = false;
+    // UPDATE THIS
     // The last scientist that an animation was played from. Used to calculate current frame with Lottie/Bodymovin
-    this.lastScientistFrom = "democritus";
+    this.lastStartFrame = 0;
 
     // Plays from one scientist in the list to another scientist in the list. Works forwards and backwards.
     // callback called on completion of the animation segment
@@ -57,10 +58,12 @@ function AtomAnimation(elementId, jsonLocation) {
         }
 
         // Plays the segments
-        if (scientistFrom == scientistTo) {
+        if (scientistFrom === scientistTo) {
             this.animation.playSegments([this.scientistFrames[scientistFrom][0], this.scientistFrames[scientistTo][1]], true);
+            this.lastStartFrame = this.scientistFrames[scientistFrom][0];
         } else {
             this.animation.playSegments([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]], true);
+            this.lastStartFrame = this.scientistFrames[scientistFrom][1];
         }
 
         // Helper local functions for callbacks
@@ -74,7 +77,6 @@ function AtomAnimation(elementId, jsonLocation) {
         }.bind(this);
 
         this.playing = scientistFrom;
-        this.lastScientistFrom = scientistFrom;
         this.animation.removeEventListener("enterFrame", onEnterFrame);
         this.animation.removeEventListener("complete", onComplete);
         this.animation.addEventListener("complete", onComplete);
@@ -84,15 +86,30 @@ function AtomAnimation(elementId, jsonLocation) {
         }
     };
 
+    this.getLastScientist = function(scientistName) {
+        var currentScientistIndex = this.scientistOrder.indexOf(scientistName);
+        // Checks if we've gone below an index of 0
+        if (currentScientistIndex - 1 < 0) {
+            return false;
+        }
+        var lastScientistIndex = currentScientistIndex - 1;
+        return this.scientistOrder[lastScientistIndex];
+    };
+
+    this.getNextScientist = function(scientistName) {
+        var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
+        // Checks if we've exceeded the # of scientists in the list
+        if (currentScientistIndex < 0 || currentScientistIndex + 1 >= this.scientistOrder.length) {
+            return false;
+        }
+        var nextScientistIndex = currentScientistIndex + 1;
+        return this.scientistOrder[nextScientistIndex];
+    };
+
     this.handleEnterFrame = function(event, callback) {
-        if (event.direction == 1) {
+        if (event.direction === 1) {
             // Moving forward
-            var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
-            // Checks if we've exceeded the # of scientists in the list
-            if (currentScientistIndex < 0 || currentScientistIndex + 1 >= this.scientistOrder.length) {
-                return false;
-            }
-            var nextScientistIndex = currentScientistIndex + 1;
+            var nextScientist = this.getNextScientist(this.playing);
 
             /**
              * Based on the model:
@@ -103,18 +120,16 @@ function AtomAnimation(elementId, jsonLocation) {
              *
              * If moving from this direction, we want this if statement to be true when the current frame passes the next scientist's first frame
              */
-            if (this.scientistFrames[this.scientistOrder[nextScientistIndex]][0] <= this.scientistFrames[this.lastScientistFrom][1] + event.currentTime) {
-                this.playing = this.scientistOrder[nextScientistIndex];
-                callback(this.playing);
+
+            if (nextScientist !== false) {
+                if (this.scientistFrames[nextScientist][0] <= this.lastStartFrame + event.currentTime) {
+                    this.playing = nextScientist;
+                    callback(this.playing);
+                }
             }
         } else {
             // Moving backward
-            var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
-            // Checks if we've gone below an index of 0
-            if (currentScientistIndex - 1 < 0) {
-                return false;
-            }
-            var lastScientistIndex = currentScientistIndex - 1;
+            var lastScientist = this.getLastScientist(this.playing);
 
             /**
              * Based on the model:
@@ -125,9 +140,12 @@ function AtomAnimation(elementId, jsonLocation) {
              *
              * If moving from this direction, we want this if statement to be true when the current frame passes the current scientist's first frame
              */
-            if (this.scientistFrames[this.playing][0] >= this.scientistFrames[this.lastScientistFrom][1] - event.totalTime + event.currentTime) {
-                this.playing = this.scientistOrder[lastScientistIndex];
-                callback(this.playing);
+
+            if (lastScientist !== false) {
+                if (this.scientistFrames[this.playing][0] >= this.lastStartFrame - event.totalTime + event.currentTime) {
+                    this.playing = lastScientist;
+                    callback(this.playing);
+                }
             }
         }
     };

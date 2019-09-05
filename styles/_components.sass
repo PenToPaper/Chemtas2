@@ -292,6 +292,7 @@ article
     bottom: 0
     padding-right: 45px
     opacity: 1
+    z-index: 20
     transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out
     span
         font-size: 100px
@@ -300,3 +301,6 @@ article
     #atom-evolution
         padding: 0px 45px
         height: 60%
+    &.hidden
+        opacity: 0
+        z-index: -1

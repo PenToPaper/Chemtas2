@@ -44,8 +44,7 @@ function AtomAnimation(elementId, jsonLocation) {
     // Dynamic
     // If animation is being played, the currently displayed model. If none being played, false
     this.playing = false;
-    // UPDATE THIS
-    // The last scientist that an animation was played from. Used to calculate current frame with Lottie/Bodymovin
+    // The start frame number of the last animation that was played. Used to calculate current frame with Lottie/Bodymovin
     this.lastStartFrame = 0;
 
     // Plays from one scientist in the list to another scientist in the list. Works forwards and backwards.
@@ -86,6 +85,7 @@ function AtomAnimation(elementId, jsonLocation) {
         }
     };
 
+    // Helper function for finding last scientist based on argument. Does not assume this.playing Returns false if there is no last scientist.
     this.getLastScientist = function(scientistName) {
         var currentScientistIndex = this.scientistOrder.indexOf(scientistName);
         // Checks if we've gone below an index of 0
@@ -96,6 +96,7 @@ function AtomAnimation(elementId, jsonLocation) {
         return this.scientistOrder[lastScientistIndex];
     };
 
+    // Helper function for finding next scientist based on argument. Does not assume this.playing. Returns false if there is no next scientist.
     this.getNextScientist = function(scientistName) {
         var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
         // Checks if we've exceeded the # of scientists in the list

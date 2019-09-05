@@ -61,7 +61,6 @@ function AtomAnimation(elementId, jsonLocation) {
             this.animation.playSegments([this.scientistFrames[scientistFrom][0], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][0];
         } else {
-            console.log([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]]);
             this.animation.playSegments([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][1];
         }

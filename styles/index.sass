@@ -26,62 +26,72 @@
 article#dalton-article
     header
         background-color: $dalton
+        .article-header-right h3, .article-header-left h2
+            color: $dalton-text
         &::before
             background-image: url("../assets/daltonbackground.png")
             background-position: left 45%
             opacity: 0.3
     .article-header-right
-        background-color: darken($dalton, 20)
+        background-color: #2DB3B3
         h3
-            background-color: #58F0F0
+            background-color: #39E6E6
 
 article#thomson-article
     header
         background-color: $thomson
+        .article-header-right h3, .article-header-left h2
+            color: $thomson-text
         &::before
             background-image: url("../assets/thomsonbackground.png")
             background-position: left 15%
             opacity: 0.3
     .article-header-right
-        background-color: darken($thomson, 20)
+        background-color: #40B850
         h3
-            background-color: #62F058
+            background-color: #56F76B
 
 article#rutherford-article
     header
         background-color: $rutherford
+        .article-header-right h3, .article-header-left h2
+            color: $rutherford-text
         &::before
             background-image: url("../assets/rutherfordbackground.png")
             background-position: left 50%
             opacity: 0.3
     .article-header-right
-        background-color: darken($rutherford, 20)
+        background-color: #C9CC16
         h3
             background-color: #FBFF1C
 
 article#bohr-article
     header
         background-color: $bohr
+        .article-header-right h3, .article-header-left h2
+            color: $bohr-text
         &::before
             background-image: url("../assets/bohrbackground.png")
             background-position: left 40%
             opacity: 0.3
     .article-header-right
-        background-color: darken($bohr, 20)
+        background-color: #C98F51
         h3
-            background-color: #E8B251
+            background-color: #E6B581
 
 article#schrodinger-article
     header
         background-color: $schrodinger
+        .article-header-right h3, .article-header-left h2
+            color: $schrodinger-text
         &::before
             background-image: url("../assets/schrodingerbackground.png")
             background-position: left 45%
             opacity: 0.3
     .article-header-right
-        background-color: darken($schrodinger, 20)
+        background-color: #D95F5F
         h3
-            background-color: #E35D54
+            background-color: #FF8585
 
 .article-hidden, .hidden
     height: 0px
@@ -96,16 +106,28 @@ article#schrodinger-article
 #atom-evolution-container
     &.democritus-animation
         background-color: $democritus
+        span
+            color: $democritus-text
     &.dalton-animation
         background-color: $dalton
+        span
+            color: $dalton-text
     &.thomson-animation
         background-color: $thomson
+        span
+            color: $thomson-text
     &.rutherford-animation
         background-color: $rutherford
+        span
+            color: $rutherford-text
     &.bohr-animation
         background-color: $bohr
+        span
+            color: $bohr-text
     &.schrodinger-animation
         background-color: $schrodinger
+        span
+            color: $schrodinger-text
     &.hidden
         opacity: 0
         z-index: -1

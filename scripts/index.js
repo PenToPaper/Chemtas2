@@ -22,7 +22,7 @@ function AtomAnimation(elementId, jsonLocation) {
     // Array[1] = first frame where the scientist's work animation is complete
     this.scientistFrames = {
         democritus: [0, 20],
-        dalton: [40, 60],
+        dalton: [40, 61],
         thomson: [80, 110],
         rutherford: [120, 180],
         bohr: [200, 260],
@@ -61,6 +61,7 @@ function AtomAnimation(elementId, jsonLocation) {
             this.animation.playSegments([this.scientistFrames[scientistFrom][0], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][0];
         } else {
+            console.log([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]]);
             this.animation.playSegments([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][1];
         }

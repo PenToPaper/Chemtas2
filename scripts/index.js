@@ -1,6 +1,6 @@
 // onload
 document.addEventListener("DOMContentLoaded", function(event) {
-    var chemTAS = new ChemTAS("democritus", "atom-evolution", "../assets/atomevolution.json");
+    var chemTAS = new ChemTAS("none", "atom-evolution", "../assets/atomevolution.json");
     chemTAS.init();
 });
 
@@ -52,7 +52,7 @@ function AtomAnimation(elementId, jsonLocation) {
     // transitionScientistCallback called when during an animation a model of a different scientist is animated to. Gets passed the new scientist's name
     this.playFrom = function(scientistFrom, scientistTo, callback, transitionScientistCallback) {
         // Makes sure the scientists passed are valid
-        if (!(scientistFrom in this.scientistFrames) || !(scientistTo in this.scientistFrames)) {
+        if (!this.scientistOrder.concat(["none"]).includes(scientistFrom) || !this.scientistOrder.includes(scientistTo)) {
             return false;
         }
 
@@ -60,6 +60,10 @@ function AtomAnimation(elementId, jsonLocation) {
         if (scientistFrom === scientistTo) {
             this.animation.playSegments([this.scientistFrames[scientistFrom][0], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][0];
+        } else if (scientistFrom === "none") {
+            this.animation.playSegments([this.scientistFrames[this.scientistOrder[0]][0], this.scientistFrames[scientistTo][1]], true);
+            this.lastStartFrame = 0;
+            scientistFrom = this.scientistOrder[0];
         } else {
             this.animation.playSegments([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][1];
@@ -151,16 +155,6 @@ function AtomAnimation(elementId, jsonLocation) {
         }
     };
     this.handleEnterFrame = this.handleEnterFrame.bind(this);
-
-    // Init function, listens for when animation is loaded, then plays first scientist animation
-    this.init = function(activeScientist, callback) {
-        this.animation.addEventListener(
-            "DOMLoaded",
-            function() {
-                this.playFrom(activeScientist, activeScientist, callback);
-            }.bind(this)
-        );
-    };
 }
 
 // Full application state managing class
@@ -253,6 +247,8 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
 
     // Shows the animation html object
     this.showAnimation = function() {
+        var onboarding = document.getElementById("onboarding");
+        onboarding.className = "hidden";
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
         animation.className = this.activeScientist + "-animation";
     };
@@ -307,8 +303,6 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
 
     // Init, shows the animation, initializes this.atomAnimation, binds event handlers
     this.init = function() {
-        this.showAnimation();
-        this.atomAnimation.init(this.activeScientist, this.handleAnimationDone.bind(this));
         this.bindScientistButtons();
         this.bindMiniNavOpen();
         window.addEventListener("resize", this.handleNavLock.bind(this));

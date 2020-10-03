@@ -55,7 +55,7 @@ nav
     .timeline-node
         margin-top: 30px
         display: flex
-        align-content: center
+        align-items: center
         cursor: pointer
         background-color: transparent
         border: none
@@ -77,13 +77,15 @@ nav
         text-align: left
         margin-left: 15px
         span
-            font-size: 20px
+            font-size: $font-smaller
+            line-height: $default-line-height
             display: block
             &:first-child
                 font-weight: 700
     .timeline-note
         margin-bottom: auto
-        padding: 8px
+        font-size: $font-smaller
+        line-height: $default-line-height
         font-weight: 700
         background-color: $light-gray-background
         align-self: flex-start
@@ -96,9 +98,9 @@ nav
             content: ""
             background-color: $off-black-text
         &::before
-            transform: translateY(-8px) translateX(3px)
+            transform: translateY(-4px) translateX(3px)
         &::after
-            transform: translateY(8px) translateX(-3px)
+            transform: translateY(4px) translateX(-3px)
         span
             display: block
             transform: translateY(-1px)
@@ -132,7 +134,8 @@ header
         transform: translateY(-50%)
         h3
             color: $democritus-text
-            font-size: 100px
+            font-size: $font-largest
+            line-height: $header-line-height
             font-weight: 800
     .article-header-right
         position: absolute
@@ -151,7 +154,8 @@ header
             box-sizing: border-box
             text-align: center
             color: $democritus-text
-            font-size: 45px
+            font-size: $font-medium-large
+            $header-line-height: 1.3em
             font-weight: 700
             margin-bottom: 15px
         div
@@ -190,39 +194,47 @@ section
     padding-right: 45px
     h5
         font-weight: 700
-        font-size: 32px
+        font-size: $font-medium
+        line-height: $subheader-line-height
         margin-bottom: 15px
     p
-        font-size: 20px
-        line-height: 1.5em
-        margin-top: 30px
+        text-indent: 30px
+        font-size: $font-smaller
+        line-height: $default-line-height
+        margin-top: 15px
     ol
         margin-top: 30px
+        margin-bottom: 30px
         margin-left: 30px
-        font-size: 20px
-        line-height: 1.5em
+        font-size: $font-smaller
+        line-height: $default-line-height
         counter-reset: section-list-counter
         li
             counter-increment: section-list-counter
+            margin-bottom: 15px
             &::before
                 content: counter(section-list-counter) ". "
                 width: 30px
                 display: inline-block
-                font-weight: 800
+                font-weight: 700
     .article-section-image
         float: right
         clear: right
         width: 331px
         box-sizing: border-box
         background-color: $light-gray-background
+        box-shadow: $default-shadow
         margin: 15px 0 45px 45px
         position: relative
         z-index: -2
         &.image-container
             box-sizing: border-box
             padding: 30px
-            span, p
+            span
                 margin-top: 15px
+                padding: 0px
+            p
+                margin-top: 8px
                 padding: 0px
         img
             width: 100%
@@ -231,18 +243,26 @@ section
         span, p
             padding: 15px
             display: block
-            line-height: 1.5em
-            font-size: 16px
+            font-size: $font-smaller
+            font-weight: 700
+            line-height: $default-line-height
             text-align: center
         p
             text-align: left
+            font-size: $font-smallest
+            text-indent: 0
+            margin-top: 0
         ol
             margin-top: 15px
             margin-left: 0px
-            font-size: 16px
+            margin-bottom: 0px
+            font-size: $font-smallest
+            font-weight: 700
+            line-height: $default-line-height
             li
                 &::before
                     width: 15px
+                    margin-right: 8px
 
 .mini-discovery-date
     display: none
@@ -308,6 +328,7 @@ article
 #onboarding
     background-color: $onboarding
     z-index: 1
+    padding-right: 0
     &::after
         content: ""
         position: absolute
@@ -324,14 +345,16 @@ article
             position: 30% 0%
     h1, h2
         position: relative
+        text-align: center
         z-index: 2
-        font-weight: 700
-        line-height: 1.2em
     h1
-        font-size: 100px
+        font-size: $font-largest
+        font-weight: 700
+        margin-bottom: -30px
     h2
-        font-size: 48px
-        margin-bottom: 0px
+        font-size: $font-medium-large
+        font-weight: 400
+        height: auto
     &.hidden
         display: none
     .logo-mark-container

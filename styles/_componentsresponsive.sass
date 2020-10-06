@@ -1,78 +1,67 @@
-@media screen and (max-width: 1500px)
-    #onboarding
-        h1
-            font-size: 75px
-        span
-            font-size: 37px
-    
-@media screen and (max-width: 1375px)
+@media screen and (max-width: 1550px)
     // Adjust font sizes
     .nav-body
         .timeline-node-text
             span
-                font-size: 16px
+                font-size: $font-smallest
+        .timeline-note
+            font-size: $font-smallest
     
     header
         .article-header-left
             h3
-                font-size: 60px
-            span
-                font-size: 18px
+                font-size: $font-larger
         .article-header-right
             h4
-                font-size: 32px
+                font-size: $font-medium
 
     section
         h5
-            font-size: 24px
+            font-size: $font-medium-small
         p
-            font-size: 16px
+            font-size: $font-smallest
         ol
-            font-size: 16px
+            font-size: $font-smallest
         .article-section-image
             span, p
-                font-size: 14px
-            ol
-                font-size: 14px
+                font-size: $font-smallest
 
     #atom-evolution-container
         span
-            font-size: 60px
+            font-size: $font-larger
 
     // Nav
     nav
-        min-width: 225px
+        min-width: 200px
         .nav-body
-            padding: 30px
-            &::after
-                left: 47px
+            padding: 45px
         .nav-header
             padding-left: 30px
             padding-right: 30px
 
     // Header
     header
-        height: 180px
+        height: 210px
         &::before
-            right: 232 + 45px
+            right: 250px + 45px
         .article-header-right
-            width: 232px
+            width: 250px
     
     // Main
     main
-        padding-left: 225 + 45px
+        padding-left: 235 + 45px
 
     #atom-evolution-container, #onboarding
-        left: 225px
+        left: 235px
 
     section .article-section-image
-        width: 232px
+        width: 250px
     
     #onboarding
         h1
-            font-size: 60px
-        span
-            font-size: 29px
+            font-size: $font-larger
+        h2
+            font-size: $font-medium
 
 @media screen and (max-width: 1100px)
     // Nav

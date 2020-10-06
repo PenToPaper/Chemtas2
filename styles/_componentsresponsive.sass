@@ -25,6 +25,10 @@
         .article-section-image
             span, p
                 font-size: $font-smallest
+            ol
+                font-weight: 400
+                li::before
+                    margin-right: 4px
 
     #atom-evolution-container
         span
@@ -114,18 +118,40 @@
     #atom-evolution-container, #onboarding
         left: 235 - 145px
 
-@media screen and (max-width: 800px)
+@media screen and (max-width: 1000px)
+    header
+        .article-header-left
+            h3
+                font-size: $font-large
+        .article-header-right
+            h4
+                font-size: $font-medium-small
+
+    section
+        h5
+            font-size: $font-small
+
+    #atom-evolution-container
+        span
+            font-size: $font-large
+
+    #onboarding
+        h1
+            font-size: $font-large
+        h2
+            font-size: $font-medium-small
+
+
+@media screen and (max-width: 850px)
     // Font sizes
     header
         .article-header-left
             h3
-                font-size: 42px
-            span
-                font-size: 16px
+                font-size: $font-medium-large
 
     #atom-evolution-container
         span
-            font-size: 42px
+            font-size: $font-medium-large
 
     // Nav
     nav

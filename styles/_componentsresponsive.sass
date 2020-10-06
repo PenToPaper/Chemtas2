@@ -171,6 +171,8 @@
 
     .mini-discovery-date
         display: block
+        span
+            font-size: $font-small
 
     // Main
     header
@@ -230,24 +232,55 @@
             order: 5
         .article-section-image
             order: 4
-            margin: 15px auto 0px
+            margin: 45px auto 30px
             width: 100%
-            max-width: 450px
+            max-width: 350px
             float: none
+            &.image-small
+                order: 5
         h5
             margin-bottom: -8px
 
     .mini-discovery-date
-        margin: 0px auto 15px
+        margin: 45px auto
     
     #onboarding
         margin-left: 0px
         h1
-            font-size: 30px
+            font-size: $font-medium
+            margin-bottom: 15px
+            padding: 0 30px
+        h2
+            font-size: $font-small
+            line-height: $subheader-line-height
         span
-            font-size: 20px
+            font-size: $font-small
         .conditional-br
             display: block
+            margin-bottom: 0
+    
+    .image-large
+        display: none
+    
+    .image-small
+        display: block
+
+@media screen and (max-width: 400px)
+    header
+        .article-header-left
+            h3
+                font-size: $font-medium
+
+    section
+        h5
+            font-size: $font-smaller
+
+    #atom-evolution-container
+        span
+            font-size: $font-medium
+    
+    .mini-discovery-date span
+        font-size: $font-smaller
 
 @media screen and (max-width: 550px)
     #onboarding::after

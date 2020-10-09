@@ -282,15 +282,16 @@
     .mini-discovery-date span
         font-size: $font-smaller
 
-@media screen and (max-width: 550px)
-    #onboarding::after
-        background-size: cover
+@media screen and (max-height: 750px)
+    nav
+        .timeline-note
+            display: none
+        #dalton-node, #democritus-node
+            margin-bottom: 0
+        .nav-body
+            justify-content: space-between
 
-@media screen and (max-height: 620px)
-    .timeline-note
-        display: none
-
-@media screen and (max-height: 505px)
+@media screen and (max-height: 650px)
     // Nav
     nav
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, width 0.3s ease-in-out
@@ -310,7 +311,7 @@
             content: none
         .timeline-node-text
             span
-                font-size: 16px
+                font-size: $font-smallest
 
     // Main
     main
@@ -321,36 +322,47 @@
         padding-left: 45px
 
 
-@media screen and (max-height: 505px) and (max-width: 1100px)
+@media screen and (max-height: 650px) and (max-width: 1200px)
     // Nav
     body.mini-nav-open nav
         width: 400px
+    
+    nav
+        // 310px leaves 90px shown
+        transform: translateX(-310px)
+    
+        .logo-mark-container img
+            transform: translateX(156px)
 
     // Main
     main
-        padding-left: 125px
+        padding-left: 135px
     
     #atom-evolution-container, #onboarding
-        left: 80px
-        padding-left: 45px
+        left: 90px
+        padding-left: 0
 
-@media screen and (max-height: 505px) and (max-width: 800px)
+@media screen and (max-height: 650px) and (max-width: 850px)
     // Main
     main
         padding-left: 45px
+
+    nav
+        // 310px leaves 90px shown
+        transform: translateX(100%)
+    
+        .logo-mark-container img
+            transform: translateX(0px)
 
     #atom-evolution-container, #onboarding
         left: 0px
         padding-left: 0px
 
-@media screen and (max-height: 505px) and (max-width: 700px)
+@media screen and (max-height: 650px) and (max-width: 700px)
     // Main
     main
         padding-left: 15px
-        
-    #atom-evolution-container, #onboarding
-        left: 0px
-        padding-left: 0px
+
 
 nav.animation-locked
     transition: none

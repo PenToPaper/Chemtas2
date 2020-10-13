@@ -41,6 +41,10 @@ class NavButton {
     focus() {
         return this.element.focus();
     }
+
+    tabIndex(isTabbable) {
+        return this.element.setAttribute("tabindex", isTabbable ? "0" : "-1");
+    }
 }
 
 // Object for entire navbar
@@ -52,11 +56,25 @@ class Nav {
     
         this.onButtonKeyDown = this.onButtonKeyDown.bind(this);
         this.onButtonClick = this.onButtonClick.bind(this);
+        this.onWindowWidth = this.onWindowWidth.bind(this);
     
         // Populate this.articleButtons with NavButton objects
         var buttonElements = element.querySelectorAll(".timeline-node");
+
         for (var i = 0; i < buttonElements.length; i++) {
            this.articleButtons.push(new NavButton(buttonElements[i], i, this.onButtonKeyDown, this.onButtonClick))
+        }
+
+        // Bind window width event handler
+        this.onWindowWidth();
+        window.addEventListener("resize", this.onWindowWidth);
+    }
+
+    onWindowWidth() {
+        var isCollapsedMenu = window.innerWidth <= 1200;
+
+        for (var i = 0; i < this.articleButtons.length; i++) {
+            this.articleButtons[i].tabIndex(!isCollapsedMenu);
         }
     }
 
@@ -339,11 +357,14 @@ class ChemTAS {
             return false;
         }
 
-        if (this.miniNavOpen) {
-            body[0].className = "mini-nav-open";
-        } else {
-            body[0].className = "";
+        // Make sure timeline nodes are tabbable if the menu is open
+        var timelineNodes = document.getElementsByClassName("timeline-node");
+        for (var i = 0; i < timelineNodes.length; i++) {
+            timelineNodes[i].setAttribute("tabindex", this.miniNavOpen ? "0" : "-1");
         }
+
+        body[0].className = this.miniNavOpen ? "mini-nav-open" : "";
+
     };
 
     // Locks the nav from transitioning when

@@ -307,8 +307,19 @@ class ChemTAS {
         this.changeActiveScientist(this.activeScientist);
         this.hideAllArticles();
         this.showAnimation();
+        this.navButtonAria();
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
     };
+
+    // Changes timeline node buttons from aria-expanded = "false" to aria-expanded = "true" to reflect the article currently visible
+    navButtonAria() {
+        var nodes = document.getElementsByClassName("timeline-node");
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].setAttribute("aria-expanded", "false");
+        }
+        
+        document.getElementById(this.activeScientist + "-node").setAttribute("aria-expanded", "true")
+    }
 
     // Binds this.handleMiniNavOpen to the mini logo being clicked
     bindMiniNavOpen() {

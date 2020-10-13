@@ -13,44 +13,163 @@ function collectionBind(collection, listenerType, func) {
     }
 }
 
+// Object for individual nav buttons
+// Binds event handlers, tracks its index, and provides a focus method
+class NavButton {
+    constructor(element, index, onKeyDown, onClick) {
+        this.element = element;
+        this.index = index;
+    
+        this.onKeyDown = (function(event) {
+            onKeyDown(event, this.index)
+        }).bind(this);
+
+        this.onClick = (function(event) {
+            onClick(event, this.index)
+        }).bind(this);
+
+        this.focus = this.focus.bind(this);
+    
+        element.addEventListener("keydown", function(event) {
+            return onKeyDown(event, index);
+        })
+        element.addEventListener("click", function(event) {
+            return onClick(event, index);
+        })
+    }
+
+    focus() {
+        return this.element.focus();
+    }
+}
+
+// Object for entire navbar
+class Nav {
+    constructor(onActiveChange, element) {
+        this.onActiveChange = onActiveChange;
+        this.element = element;
+        this.articleButtons = [];
+    
+        this.onButtonKeyDown = this.onButtonKeyDown.bind(this);
+        this.onButtonClick = this.onButtonClick.bind(this);
+    
+        // Populate this.articleButtons with NavButton objects
+        var buttonElements = element.querySelectorAll(".timeline-node");
+        for (var i = 0; i < buttonElements.length; i++) {
+           this.articleButtons.push(new NavButton(buttonElements[i], i, this.onButtonKeyDown, this.onButtonClick))
+        }
+    }
+
+    onButtonKeyDown(event, index) {
+        var stopFlag = false;
+        switch(event.keyCode) {
+            // 32 = space
+            // 13 = enter
+            case 32:
+            case 13:
+                this.onActiveChange(event.target);
+                stopFlag = true
+                break;
+            // 39 = arrow right
+            // 40 = arrow down
+            case 39:
+            case 40:
+                this.focusNext(index);
+                stopFlag = true;
+                break;
+            // 37 = arrow left
+            // 38 = arrow up
+            case 37:
+            case 38:
+                this.focusPrev(index);
+                stopFlag = true;
+                break;
+            // 35 = end
+            case 35:
+                this.focusLast();
+                stopFlag = true;
+                break;
+            // 36 = home
+            case 36:
+                this.focusFirst();
+                stopFlag = true;
+                break;
+        }
+        if (stopFlag) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    onButtonClick(event, element) {
+        this.onActiveChange(event.target.closest(".timeline-node"));
+    }
+
+    focus(n) {
+        this.articleButtons[n].focus();
+    }
+
+    focusNext(n) {
+        this.focus(n + 1 >= this.articleButtons.length ? 0 : n + 1);
+    }
+
+    focusPrev(n) {
+        this.focus(n - 1 < 0 ? this.articleButtons.length - 1 : n - 1);
+    }
+
+    focusFirst() {
+        this.focus(0);
+    }
+
+    focusLast() {
+        this.focus(this.articleButtons.length - 1);
+    }
+}
+
 // Wrapper object for the bodymovin animation.
-function AtomAnimation(elementId, jsonLocation) {
-    // Static
+class AtomAnimation {
+    constructor(elementId, jsonLocation) {
+        // Static
 
-    // Each key represents a scientist
-    // Array[0] = first frame where that scientist's work is being animated in
-    // Array[1] = first frame where the scientist's work animation is complete
-    this.scientistFrames = {
-        democritus: [0, 20],
-        dalton: [40, 61],
-        thomson: [80, 110],
-        rutherford: [120, 180],
-        bohr: [200, 260],
-        schrodinger: [280, 319]
-    };
-    this.scientistOrder = ["democritus", "dalton", "thomson", "rutherford", "bohr", "schrodinger"];
+        // Binding functions
+        this.handleEnterFrame = this.handleEnterFrame.bind(this);
 
-    // Assigned on construction, not changed afterwards
-    this.elementId = elementId;
-    this.jsonLocation = jsonLocation;
-    this.animation = bodymovin.loadAnimation({
-        container: document.getElementById(this.elementId),
-        renderer: "svg",
-        loop: false,
-        autoplay: false,
-        path: this.jsonLocation
-    });
+        // Each key represents a scientist
+        // Array[0] = first frame where that scientist's work is being animated in
+        // Array[1] = first frame where the scientist's work animation is complete
+        this.scientistFrames = {
+            democritus: [0, 20],
+            dalton: [40, 61],
+            thomson: [80, 110],
+            rutherford: [120, 180],
+            bohr: [200, 260],
+            schrodinger: [280, 319]
+        };
+        this.scientistOrder = ["democritus", "dalton", "thomson", "rutherford", "bohr", "schrodinger"];
 
-    // Dynamic
-    // If animation is being played, the currently displayed model. If none being played, false
-    this.playing = false;
-    // The start frame number of the last animation that was played. Used to calculate current frame with Lottie/Bodymovin
-    this.lastStartFrame = 0;
+        // Assigned on construction, not changed afterwards
+        this.elementId = elementId;
+        this.jsonLocation = jsonLocation;
+        this.animation = bodymovin.loadAnimation({
+            container: document.getElementById(this.elementId),
+            renderer: "svg",
+            loop: false,
+            autoplay: false,
+            path: this.jsonLocation
+        });
 
+        // Dynamic
+        // If animation is being played, the currently displayed model. If none being played, false
+        this.playing = false;
+        // The start frame number of the last animation that was played. Used to calculate current frame with Lottie/Bodymovin
+        this.lastStartFrame = 0;
+    }
+
+    
     // Plays from one scientist in the list to another scientist in the list. Works forwards and backwards.
     // callback called on completion of the animation segment
     // transitionScientistCallback called when during an animation a model of a different scientist is animated to. Gets passed the new scientist's name
-    this.playFrom = function(scientistFrom, scientistTo, callback, transitionScientistCallback) {
+    playFrom(scientistFrom, scientistTo, callback, transitionScientistCallback) {
         // Makes sure the scientists passed are valid
         if (!this.scientistOrder.concat(["none"]).includes(scientistFrom) || !this.scientistOrder.includes(scientistTo)) {
             return false;
@@ -90,7 +209,7 @@ function AtomAnimation(elementId, jsonLocation) {
     };
 
     // Helper function for finding last scientist based on argument. Does not assume this.playing Returns false if there is no last scientist.
-    this.getLastScientist = function(scientistName) {
+    getLastScientist(scientistName) {
         var currentScientistIndex = this.scientistOrder.indexOf(scientistName);
         // Checks if we've gone below an index of 0
         if (currentScientistIndex - 1 < 0) {
@@ -101,7 +220,7 @@ function AtomAnimation(elementId, jsonLocation) {
     };
 
     // Helper function for finding next scientist based on argument. Does not assume this.playing. Returns false if there is no next scientist.
-    this.getNextScientist = function(scientistName) {
+    getNextScientist(scientistName) {
         var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
         // Checks if we've exceeded the # of scientists in the list
         if (currentScientistIndex < 0 || currentScientistIndex + 1 >= this.scientistOrder.length) {
@@ -111,7 +230,7 @@ function AtomAnimation(elementId, jsonLocation) {
         return this.scientistOrder[nextScientistIndex];
     };
 
-    this.handleEnterFrame = function(event, callback) {
+    handleEnterFrame(event, callback) {
         if (event.direction === 1) {
             // Moving forward
             var nextScientist = this.getNextScientist(this.playing);
@@ -154,31 +273,31 @@ function AtomAnimation(elementId, jsonLocation) {
             }
         }
     };
-    this.handleEnterFrame = this.handleEnterFrame.bind(this);
 }
 
 // Full application state managing class
-function ChemTAS(activeScientist, animationElementId, animationPath) {
-    // Static
+class ChemTAS {
+    constructor(activeScientist, animationElementId, animationPath) {
+        // Static
 
-    // Delay for how long an animation stays on its last frame before article begins to show
-    this.delay = 333;
+        // Delay for how long an animation stays on its last frame before article begins to show
+        this.delay = 333;
 
-    // Assigned on construction
-    this.atomAnimation = new AtomAnimation(animationElementId, animationPath);
+        // Binding functions
+        this.handleScientistButton = this.handleScientistButton.bind(this);
 
-    // Dynamic
-    this.activeScientist = activeScientist;
-    this.miniNavOpen = false;
-    this.miniNavLockTimeout = null;
+        // Assigned on construction
+        this.atomAnimation = new AtomAnimation(animationElementId, animationPath);
+        this.nav = new Nav(this.handleScientistButton, document.getElementsByTagName("nav")[0])
 
-    // Binds controls on sidebar
-    this.bindScientistButtons = function() {
-        collectionBind(document.getElementsByClassName("timeline-node"), "click", this.handleScientistButton.bind(this));
-    };
+        // Dynamic
+        this.activeScientist = activeScientist;
+        this.miniNavOpen = false;
+        this.miniNavLockTimeout = null;
+    }
 
     // Handles a sidebar control button selection
-    this.handleScientistButton = function(event, element) {
+    handleScientistButton(element) {
         var prevActiveScientist = this.activeScientist.slice();
         this.activeScientist = element.getAttribute("data-article");
 
@@ -192,18 +311,18 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Binds this.handleMiniNavOpen to the mini logo being clicked
-    this.bindMiniNavOpen = function() {
+    bindMiniNavOpen() {
         collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen.bind(this));
     };
 
     // Toggles the hidden nav menu
-    this.handleMiniNavOpen = function(event, element) {
+    handleMiniNavOpen(event, element) {
         this.miniNavOpen = !this.miniNavOpen;
         this.handleMiniNavOpenUpdate();
     };
 
     // Updates the mini nav class in the dom. Called after this.miniNavOpen is updated
-    this.handleMiniNavOpenUpdate = function() {
+    handleMiniNavOpenUpdate() {
         var body = document.getElementsByTagName("body");
         if (body.length === 0) {
             return false;
@@ -217,7 +336,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Locks the nav from transitioning when
-    this.handleNavLock = function() {
+    handleNavLock() {
         var nav = document.getElementsByTagName("nav");
         if (nav.length === 0) {
             return false;
@@ -227,7 +346,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Unlocks the nav, called after 500ms of not resizing window
-    this.handleNavUnlock = function() {
+    handleNavUnlock() {
         var nav = document.getElementsByTagName("nav");
         if (nav.length === 0) {
             return false;
@@ -238,7 +357,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     // Handles a point in the animation where a scientist's model transitions into another scientists's model.
     // Changes animation background color
     // Changes animation header text
-    this.handleScientistTransition = function(newScientist) {
+    handleScientistTransition(newScientist) {
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
         animation.className = newScientist + "-animation";
         var newScientistLabel = newScientist.charAt(0).toUpperCase() + newScientist.slice(1);
@@ -246,7 +365,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Shows the animation html object
-    this.showAnimation = function() {
+    showAnimation() {
         var onboarding = document.getElementById("onboarding");
         onboarding.className = "hidden";
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
@@ -254,7 +373,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Changes the active scientist in the sidebar, making the circle filled with the appropriate color
-    this.changeActiveScientist = function(activeScientist) {
+    changeActiveScientist(activeScientist) {
         var sidebarNodes = document.getElementsByClassName("timeline-node");
         for (var i = 0; i < sidebarNodes.length; i++) {
             sidebarNodes[i].className = sidebarNodes[i].className.replace(/\s?timeline-node-selected\s?/, "");
@@ -265,7 +384,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Makes the activeScientist article visible. DOES NOT HIDE OTHER ARTICLES. SEE this.hideAllArticles
-    this.changeActiveArticle = function(activeScientist) {
+    changeActiveArticle(activeScientist) {
         var articles = document.getElementsByTagName("article");
         for (var i = 0; i < articles.length; i++) {
             if (articles[i].id == activeScientist + "-article") {
@@ -275,7 +394,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Hides all articles
-    this.hideAllArticles = function() {
+    hideAllArticles() {
         var articles = document.getElementsByTagName("article");
         for (var i = 0; i < articles.length; i++) {
             articles[i].className = "article-hidden";
@@ -283,7 +402,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Hides the animation, does not remove color as animation happens
-    this.hideAnimation = function() {
+    hideAnimation() {
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
         var newClassName = animation.className.replace(" hidden", "");
         animation.className = newClassName + " hidden";
@@ -291,7 +410,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
 
     // Event handler for animation complete, cleans up (shows active article + hides animation)
     // Uses this.delay static variable to delay the clean up
-    this.handleAnimationDone = function() {
+    handleAnimationDone() {
         setTimeout(
             function() {
                 this.changeActiveArticle(this.activeScientist);
@@ -302,8 +421,7 @@ function ChemTAS(activeScientist, animationElementId, animationPath) {
     };
 
     // Init, shows the animation, initializes this.atomAnimation, binds event handlers
-    this.init = function() {
-        this.bindScientistButtons();
+    init() {
         this.bindMiniNavOpen();
         window.addEventListener("resize", this.handleNavLock.bind(this));
     };

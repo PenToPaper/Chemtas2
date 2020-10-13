@@ -400,6 +400,7 @@ class ChemTAS {
         for (var i = 0; i < articles.length; i++) {
             if (articles[i].id == activeScientist + "-article") {
                 articles[i].className = "";
+                articles[i].setAttribute("aria-hidden", "false");
             }
         }
     };
@@ -409,6 +410,7 @@ class ChemTAS {
         var articles = document.getElementsByTagName("article");
         for (var i = 0; i < articles.length; i++) {
             articles[i].className = "article-hidden";
+            articles[i].setAttribute("aria-hidden", "true");
         }
     };
 

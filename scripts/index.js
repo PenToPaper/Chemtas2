@@ -50,13 +50,16 @@ class NavButton {
 // Object for entire navbar
 class Nav {
     constructor(onActiveChange, element) {
-        this.onActiveChange = onActiveChange;
+        this.onActiveChangeCallback = onActiveChange;
         this.element = element;
         this.articleButtons = [];
+        this.miniNavOpen = false;
     
         this.onButtonKeyDown = this.onButtonKeyDown.bind(this);
         this.onButtonClick = this.onButtonClick.bind(this);
         this.onWindowWidth = this.onWindowWidth.bind(this);
+        this.onActiveChange = this.onActiveChange.bind(this);
+        this.handleMiniNavOpen = this.handleMiniNavOpen.bind(this);
     
         // Populate this.articleButtons with NavButton objects
         var buttonElements = element.querySelectorAll(".timeline-node");
@@ -68,7 +71,54 @@ class Nav {
         // Bind window width event handler
         this.onWindowWidth();
         window.addEventListener("resize", this.onWindowWidth);
+
+        // Bind mini nav toggle button
+        collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen);
     }
+
+    onActiveChange(element) {
+        this.onActiveChangeCallback(element);
+        this.miniNavOpen = false;
+        this.handleMiniNavOpenUpdate();
+        this.navButtonAria(element.getAttribute("data-article"));
+    }
+
+    // Changes timeline node buttons from aria-expanded = "false" to aria-expanded = "true" to reflect the article currently visible
+    navButtonAria(article) {
+        var nodes = document.getElementsByClassName("timeline-node");
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].setAttribute("aria-expanded", "false");
+        }
+        
+        document.getElementById(article + "-node").setAttribute("aria-expanded", "true")
+    }
+
+    handleMiniNavOpen(event) {
+        this.miniNavOpen = !this.miniNavOpen;
+        this.handleMiniNavOpenUpdate();
+    }
+
+    // Updates the mini nav class in the dom. Called after this.miniNavOpen is updated
+    handleMiniNavOpenUpdate() {
+        var body = document.getElementsByTagName("body");
+        if (body.length === 0) {
+            return false;
+        }
+
+        // Make sure timeline nodes are tabbable if the menu is open
+        var timelineNodes = document.getElementsByClassName("timeline-node");
+        for (var i = 0; i < timelineNodes.length; i++) {
+            timelineNodes[i].setAttribute("tabindex", this.miniNavOpen ? "0" : "-1");
+        }
+
+        body[0].className = this.miniNavOpen ? "mini-nav-open" : "";
+
+        this.element.getElementsByClassName("logo-mark-container")[0].setAttribute("aria-expanded", this.miniNavOpen);
+        // if isCollapsedMenu is true and the mini nav is closed, output true
+        // if isCollapsedMenu is true and the mini nav is open, output false
+        // if isCollapsedMenu is false, output false
+        document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
+    };
 
     onWindowWidth() {
         var isCollapsedMenu = window.innerWidth <= 1200;
@@ -76,6 +126,16 @@ class Nav {
         for (var i = 0; i < this.articleButtons.length; i++) {
             this.articleButtons[i].tabIndex(!isCollapsedMenu);
         }
+
+        if (!isCollapsedMenu) {
+            this.miniNavOpen = false;
+            document.getElementsByTagName("body")[0].className = "";
+        }
+
+        // if isCollapsedMenu is true and the mini nav is closed, output true
+        // if isCollapsedMenu is true and the mini nav is open, output false
+        // if isCollapsedMenu is false, output false
+        document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
     }
 
     onButtonKeyDown(event, index) {
@@ -310,7 +370,6 @@ class ChemTAS {
 
         // Dynamic
         this.activeScientist = activeScientist;
-        this.miniNavOpen = false;
         this.miniNavLockTimeout = null;
     }
 
@@ -319,55 +378,13 @@ class ChemTAS {
         var prevActiveScientist = this.activeScientist.slice();
         this.activeScientist = element.getAttribute("data-article");
 
-        this.miniNavOpen = false;
-        this.handleMiniNavOpenUpdate();
-
         this.changeActiveScientist(this.activeScientist);
         this.hideAllArticles();
         this.showAnimation();
-        this.navButtonAria();
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
     };
 
-    // Changes timeline node buttons from aria-expanded = "false" to aria-expanded = "true" to reflect the article currently visible
-    navButtonAria() {
-        var nodes = document.getElementsByClassName("timeline-node");
-        for (var i = 0; i < nodes.length; i++) {
-            nodes[i].setAttribute("aria-expanded", "false");
-        }
-        
-        document.getElementById(this.activeScientist + "-node").setAttribute("aria-expanded", "true")
-    }
-
-    // Binds this.handleMiniNavOpen to the mini logo being clicked
-    bindMiniNavOpen() {
-        collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen.bind(this));
-    };
-
-    // Toggles the hidden nav menu
-    handleMiniNavOpen(event, element) {
-        this.miniNavOpen = !this.miniNavOpen;
-        this.handleMiniNavOpenUpdate();
-    };
-
-    // Updates the mini nav class in the dom. Called after this.miniNavOpen is updated
-    handleMiniNavOpenUpdate() {
-        var body = document.getElementsByTagName("body");
-        if (body.length === 0) {
-            return false;
-        }
-
-        // Make sure timeline nodes are tabbable if the menu is open
-        var timelineNodes = document.getElementsByClassName("timeline-node");
-        for (var i = 0; i < timelineNodes.length; i++) {
-            timelineNodes[i].setAttribute("tabindex", this.miniNavOpen ? "0" : "-1");
-        }
-
-        body[0].className = this.miniNavOpen ? "mini-nav-open" : "";
-
-    };
-
-    // Locks the nav from transitioning when
+    // Locks the nav from transitioning when animation is playing
     handleNavLock() {
         var nav = document.getElementsByTagName("nav");
         if (nav.length === 0) {
@@ -456,7 +473,6 @@ class ChemTAS {
 
     // Init, shows the animation, initializes this.atomAnimation, binds event handlers
     init() {
-        this.bindMiniNavOpen();
         window.addEventListener("resize", this.handleNavLock.bind(this));
     };
 }

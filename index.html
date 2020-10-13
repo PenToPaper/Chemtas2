@@ -17,10 +17,10 @@
             <div class="nav-header">
                 <img src="./assets/logo-full-dgray.svg" alt="ChemTAS Logo" />
             </div>
-            <button class="nav-header logo-mark-container">
+            <button class="nav-header logo-mark-container" aria-controls="nav-contents" aria-expanded="false">
                 <img src="./assets/logo-mark.svg" alt="ChemTAS Logo" />
             </button>
-            <div class="nav-body">
+            <div class="nav-body" id="nav-contents">
                 <button id="democritus-node" class="timeline-node" data-article="democritus" aria-controls="democritus-article" aria-expanded="false">
                     <div class="timeline-node-text">
                         <span>400 BCE</span>
@@ -63,7 +63,7 @@
             </div>
         </nav>
         <main>
-            <div id="atom-evolution-container" class="hidden">
+            <div id="atom-evolution-container" class="hidden" aria-hidden="true">
                 <span>Democritus</span>
                 <div id="atom-evolution"></div>
             </div>

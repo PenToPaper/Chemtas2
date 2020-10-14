@@ -1,5 +1,5 @@
 // onload
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function (event) {
     var chemTAS = new ChemTAS("none", "atom-evolution", "../assets/atomevolution.json");
     chemTAS.init();
 });
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 // Helper function for binding a collection of HTMLElements to an event handler
 function collectionBind(collection, listenerType, func) {
     for (var i = 0; i < collection.length; i++) {
-        collection[i].addEventListener(listenerType, function(event) {
+        collection[i].addEventListener(listenerType, function (event) {
             return func(event, this);
         });
     }
@@ -16,28 +16,27 @@ function collectionBind(collection, listenerType, func) {
 // Object for individual nav buttons
 // Binds event handlers, tracks its index, and provides a focus method
 class NavButton {
+    // element = the element object in the dom
+    // index = the index of this button relative to the rest of the navbar
+    // onKeyDown = fired with (event, index) on key down
+    // onClick = fired with (event, index) on click
     constructor(element, index, onKeyDown, onClick) {
         this.element = element;
         this.index = index;
-    
-        this.onKeyDown = (function(event) {
-            onKeyDown(event, this.index)
-        }).bind(this);
-
-        this.onClick = (function(event) {
-            onClick(event, this.index)
-        }).bind(this);
 
         this.focus = this.focus.bind(this);
-    
-        element.addEventListener("keydown", function(event) {
+
+        // Instead of (event), calls onKeyDown with (event, index)
+        // Not entirely necessary for click handler, but could be used in the future
+        element.addEventListener("keydown", function (event) {
             return onKeyDown(event, index);
-        })
-        element.addEventListener("click", function(event) {
+        });
+        element.addEventListener("click", function (event) {
             return onClick(event, index);
-        })
+        });
     }
 
+    // for parent classes
     focus() {
         return this.element.focus();
     }
@@ -50,22 +49,26 @@ class NavButton {
 // Object for entire navbar
 class Nav {
     constructor(onActiveChange, element) {
+        // Callback for when the user clicks or uses keyboard to change the active article
         this.onActiveChangeCallback = onActiveChange;
+        // DOM Element reference
         this.element = element;
+        // Array of NavButton objects
         this.articleButtons = [];
+        // Tracks if the mini nav isopen
         this.miniNavOpen = false;
-    
+
         this.onButtonKeyDown = this.onButtonKeyDown.bind(this);
         this.onButtonClick = this.onButtonClick.bind(this);
         this.onWindowWidth = this.onWindowWidth.bind(this);
         this.onActiveChange = this.onActiveChange.bind(this);
         this.handleMiniNavOpen = this.handleMiniNavOpen.bind(this);
-    
+
         // Populate this.articleButtons with NavButton objects
         var buttonElements = element.querySelectorAll(".timeline-node");
 
         for (var i = 0; i < buttonElements.length; i++) {
-           this.articleButtons.push(new NavButton(buttonElements[i], i, this.onButtonKeyDown, this.onButtonClick))
+            this.articleButtons.push(new NavButton(buttonElements[i], i, this.onButtonKeyDown, this.onButtonClick));
         }
 
         // Bind window width event handler
@@ -76,6 +79,7 @@ class Nav {
         collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen);
     }
 
+    // When the active article changes. Element represents the button that was selected
     onActiveChange(element) {
         this.onActiveChangeCallback(element);
         this.miniNavOpen = false;
@@ -89,11 +93,12 @@ class Nav {
         for (var i = 0; i < nodes.length; i++) {
             nodes[i].setAttribute("aria-expanded", "false");
         }
-        
-        document.getElementById(article + "-node").setAttribute("aria-expanded", "true")
+
+        document.getElementById(article + "-node").setAttribute("aria-expanded", "true");
     }
 
-    handleMiniNavOpen(event) {
+    // Updates local mini nav state, and calls function to update DOM
+    handleMiniNavOpen() {
         this.miniNavOpen = !this.miniNavOpen;
         this.handleMiniNavOpenUpdate();
     }
@@ -118,8 +123,10 @@ class Nav {
         // if isCollapsedMenu is true and the mini nav is open, output false
         // if isCollapsedMenu is false, output false
         document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
-    };
+    }
 
+    // Handler for adjusting DOM based on window width.
+    // Changes tabIndex on buttons, mini nav state, and aria properties of nav
     onWindowWidth() {
         var isCollapsedMenu = window.innerWidth <= 1200;
 
@@ -138,15 +145,16 @@ class Nav {
         document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
     }
 
+    // Handles a nav button's key down event firing
     onButtonKeyDown(event, index) {
         var stopFlag = false;
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             // 32 = space
             // 13 = enter
             case 32:
             case 13:
                 this.onActiveChange(event.target);
-                stopFlag = true
+                stopFlag = true;
                 break;
             // 39 = arrow right
             // 40 = arrow down
@@ -179,26 +187,32 @@ class Nav {
         }
     }
 
+    // Handles when a NavButton's onClick event fires
     onButtonClick(event, element) {
         this.onActiveChange(event.target.closest(".timeline-node"));
     }
 
+    // Focuses the nth NavButton
     focus(n) {
         this.articleButtons[n].focus();
     }
 
+    // Focuses the next NavButton
     focusNext(n) {
         this.focus(n + 1 >= this.articleButtons.length ? 0 : n + 1);
     }
 
+    // Focuses the prev NavButton
     focusPrev(n) {
         this.focus(n - 1 < 0 ? this.articleButtons.length - 1 : n - 1);
     }
 
+    // Focuses the first NavButton
     focusFirst() {
         this.focus(0);
     }
 
+    // Focuses the last NavButton
     focusLast() {
         this.focus(this.articleButtons.length - 1);
     }
@@ -221,7 +235,7 @@ class AtomAnimation {
             thomson: [80, 110],
             rutherford: [120, 180],
             bohr: [200, 260],
-            schrodinger: [280, 319]
+            schrodinger: [280, 319],
         };
         this.scientistOrder = ["democritus", "dalton", "thomson", "rutherford", "bohr", "schrodinger"];
 
@@ -233,7 +247,7 @@ class AtomAnimation {
             renderer: "svg",
             loop: false,
             autoplay: false,
-            path: this.jsonLocation
+            path: this.jsonLocation,
         });
 
         // Dynamic
@@ -243,7 +257,6 @@ class AtomAnimation {
         this.lastStartFrame = 0;
     }
 
-    
     // Plays from one scientist in the list to another scientist in the list. Works forwards and backwards.
     // callback called on completion of the animation segment
     // transitionScientistCallback called when during an animation a model of a different scientist is animated to. Gets passed the new scientist's name
@@ -267,12 +280,12 @@ class AtomAnimation {
         }
 
         // Helper local functions for callbacks
-        var onComplete = function() {
+        var onComplete = function () {
             this.playing = false;
             callback();
         }.bind(this);
 
-        var onEnterFrame = function(event) {
+        var onEnterFrame = function (event) {
             this.handleEnterFrame(event, transitionScientistCallback);
         }.bind(this);
 
@@ -284,7 +297,7 @@ class AtomAnimation {
             this.animation.addEventListener("enterFrame", onEnterFrame);
             transitionScientistCallback(this.playing);
         }
-    };
+    }
 
     // Helper function for finding last scientist based on argument. Does not assume this.playing Returns false if there is no last scientist.
     getLastScientist(scientistName) {
@@ -295,7 +308,7 @@ class AtomAnimation {
         }
         var lastScientistIndex = currentScientistIndex - 1;
         return this.scientistOrder[lastScientistIndex];
-    };
+    }
 
     // Helper function for finding next scientist based on argument. Does not assume this.playing. Returns false if there is no next scientist.
     getNextScientist(scientistName) {
@@ -306,7 +319,7 @@ class AtomAnimation {
         }
         var nextScientistIndex = currentScientistIndex + 1;
         return this.scientistOrder[nextScientistIndex];
-    };
+    }
 
     handleEnterFrame(event, callback) {
         if (event.direction === 1) {
@@ -350,7 +363,7 @@ class AtomAnimation {
                 }
             }
         }
-    };
+    }
 }
 
 // Full application state managing class
@@ -366,7 +379,7 @@ class ChemTAS {
 
         // Assigned on construction
         this.atomAnimation = new AtomAnimation(animationElementId, animationPath);
-        this.nav = new Nav(this.handleScientistButton, document.getElementsByTagName("nav")[0])
+        this.nav = new Nav(this.handleScientistButton, document.getElementsByTagName("nav")[0]);
 
         // Dynamic
         this.activeScientist = activeScientist;
@@ -382,7 +395,7 @@ class ChemTAS {
         this.hideAllArticles();
         this.showAnimation();
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
-    };
+    }
 
     // Locks the nav from transitioning when animation is playing
     handleNavLock() {
@@ -392,7 +405,7 @@ class ChemTAS {
         }
         nav[0].className = "animation-locked";
         this.miniNavLockTimeout = setTimeout(this.handleNavUnlock.bind(this), 500);
-    };
+    }
 
     // Unlocks the nav, called after 500ms of not resizing window
     handleNavUnlock() {
@@ -401,7 +414,7 @@ class ChemTAS {
             return false;
         }
         nav[0].className = "";
-    };
+    }
 
     // Handles a point in the animation where a scientist's model transitions into another scientists's model.
     // Changes animation background color
@@ -411,7 +424,7 @@ class ChemTAS {
         animation.className = newScientist + "-animation";
         var newScientistLabel = newScientist.charAt(0).toUpperCase() + newScientist.slice(1);
         animation.children[0].innerHTML = newScientistLabel;
-    };
+    }
 
     // Shows the animation html object
     showAnimation() {
@@ -419,7 +432,7 @@ class ChemTAS {
         onboarding.className = "hidden";
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
         animation.className = this.activeScientist + "-animation";
-    };
+    }
 
     // Changes the active scientist in the sidebar, making the circle filled with the appropriate color
     changeActiveScientist(activeScientist) {
@@ -430,7 +443,7 @@ class ChemTAS {
                 sidebarNodes[i].className = sidebarNodes[i].className + " timeline-node-selected";
             }
         }
-    };
+    }
 
     // Makes the activeScientist article visible. DOES NOT HIDE OTHER ARTICLES. SEE this.hideAllArticles
     changeActiveArticle(activeScientist) {
@@ -441,7 +454,7 @@ class ChemTAS {
                 articles[i].setAttribute("aria-hidden", "false");
             }
         }
-    };
+    }
 
     // Hides all articles
     hideAllArticles() {
@@ -450,29 +463,29 @@ class ChemTAS {
             articles[i].className = "article-hidden";
             articles[i].setAttribute("aria-hidden", "true");
         }
-    };
+    }
 
     // Hides the animation, does not remove color as animation happens
     hideAnimation() {
         var animation = document.getElementById(this.atomAnimation.elementId + "-container");
         var newClassName = animation.className.replace(" hidden", "");
         animation.className = newClassName + " hidden";
-    };
+    }
 
     // Event handler for animation complete, cleans up (shows active article + hides animation)
     // Uses this.delay static variable to delay the clean up
     handleAnimationDone() {
         setTimeout(
-            function() {
+            function () {
                 this.changeActiveArticle(this.activeScientist);
                 this.hideAnimation();
             }.bind(this),
             this.delay
         );
-    };
+    }
 
     // Init, shows the animation, initializes this.atomAnimation, binds event handlers
     init() {
         window.addEventListener("resize", this.handleNavLock.bind(this));
-    };
+    }
 }

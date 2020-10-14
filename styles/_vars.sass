@@ -36,4 +36,12 @@ $header-line-height: 1.3em
 $subheader-line-height: 1.4em
 $default-line-height: 1.5em 
 
-$default-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$default-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+
+.moz-focus-override
+    &::-moz-focus-inner
+        border: none
+
+.outline-override
+    &:focus, &:hover
+        outline: none

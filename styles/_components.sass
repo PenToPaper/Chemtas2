@@ -22,13 +22,18 @@ nav
     background-color: $light-gray-background
 
 .nav-header
+    @extend .moz-focus-override
+    @extend .outline-override
     background-color: $mid-gray-background
     padding: 15px
     flex-grow: 0
+    &:focus img, &:hover img
+        outline: 3px solid $off-black-text
     img
+        padding: 5px 15px
         display: block
         max-width: 200px
-        margin: 0px auto
+        margin: -5px auto
     
 .logo-mark-container
     display: none
@@ -55,13 +60,14 @@ nav
         left: 62px
         z-index: -1
     .timeline-node
-        margin-top: 30px
+        @extend .moz-focus-override
         display: flex
         align-items: center
         cursor: pointer
         background-color: transparent
         border: none
-        padding: 0
+        padding: 0 6px
+        margin: 30px -6px 0
         &::before
             display: block
             content: ""
@@ -75,6 +81,8 @@ nav
             margin-bottom: auto
         &:nth-child(3)
             margin-bottom: auto
+        &:focus, &:hover
+            outline: 3px solid $off-black-text
     .timeline-node-text
         text-align: left
         margin-left: 15px
@@ -173,16 +181,21 @@ header
                 margin: auto
                 max-height: 100%
     .logo-mark-container
+        @extend .moz-focus-override
         position: absolute
         right: 45px
         top: 50%
         transform: translateY(-50%)
-        width: 56px
-        height: 56px
+        // 56px + 5px for padding
+        width: 61px
+        height: 61px
         display: none
         border: none
         background-color: transparent
-        padding: 0px
+        padding: 5px
+        margin: -5px
+        &:focus, &:hover
+            outline: 3px solid $off-black-text
         img
             transform: none
 
@@ -362,16 +375,21 @@ article
     &.hidden
         display: none
     .logo-mark-container
+        @extend .moz-focus-override
         z-index: 2
         position: absolute
         right: 45px
         top: 45px
-        width: 56px
-        height: 56px
+        // 56px + 5px for padding
+        width: 61px
+        height: 61px
         display: none
         border: none
         background-color: transparent
-        padding: 0px
+        padding: 5px
+        margin: -5px
+        &:focus, &:hover
+            outline: 3px solid $off-black-text
         img
             transform: none
 

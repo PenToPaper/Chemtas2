@@ -1,6 +1,11 @@
+import "../styles/main.sass";
+import "./favicons";
+
+import json from "../assets/atomevolution.json";
+
 // onload
 document.addEventListener("DOMContentLoaded", function (event) {
-    var chemTAS = new ChemTAS("none", "atom-evolution", "../assets/atomevolution.json");
+    var chemTAS = new ChemTAS("none", "atom-evolution", json);
     chemTAS.init();
 });
 
@@ -122,7 +127,7 @@ class Nav {
         // if isCollapsedMenu is true and the mini nav is closed, output true
         // if isCollapsedMenu is true and the mini nav is open, output false
         // if isCollapsedMenu is false, output false
-        document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
+        document.getElementById("nav-contents").setAttribute("aria-hidden", window.innerWidth <= 1200 && !this.miniNavOpen ? "true" : "false");
     }
 
     // Handler for adjusting DOM based on window width.
@@ -220,7 +225,7 @@ class Nav {
 
 // Wrapper object for the bodymovin animation.
 class AtomAnimation {
-    constructor(elementId, jsonLocation) {
+    constructor(elementId, json) {
         // Static
 
         // Binding functions
@@ -241,13 +246,13 @@ class AtomAnimation {
 
         // Assigned on construction, not changed afterwards
         this.elementId = elementId;
-        this.jsonLocation = jsonLocation;
+        this.json = json;
         this.animation = bodymovin.loadAnimation({
             container: document.getElementById(this.elementId),
             renderer: "svg",
             loop: false,
             autoplay: false,
-            path: this.jsonLocation,
+            animationData: this.json,
         });
 
         // Dynamic
@@ -368,7 +373,7 @@ class AtomAnimation {
 
 // Full application state managing class
 class ChemTAS {
-    constructor(activeScientist, animationElementId, animationPath) {
+    constructor(activeScientist, animationElementId, json) {
         // Static
 
         // Delay for how long an animation stays on its last frame before article begins to show
@@ -378,7 +383,7 @@ class ChemTAS {
         this.handleScientistButton = this.handleScientistButton.bind(this);
 
         // Assigned on construction
-        this.atomAnimation = new AtomAnimation(animationElementId, animationPath);
+        this.atomAnimation = new AtomAnimation(animationElementId, json);
         this.nav = new Nav(this.handleScientistButton, document.getElementsByTagName("nav")[0]);
 
         // Dynamic

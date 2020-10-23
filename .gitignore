@@ -1,3 +1,5 @@
 adobe/
 performance-tests/
+node_modules/
+dist/
 *.psd

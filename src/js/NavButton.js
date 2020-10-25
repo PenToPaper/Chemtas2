@@ -12,8 +12,9 @@ export default class NavButton {
 
         // Bindings
         this.focus = this.focus.bind(this);
+        this.tabIndex = this.tabIndex.bind(this);
 
-        // Event Listenrs
+        // Event Listeners
 
         // Instead of (event), calls onKeyDown with (event, index)
         // Not entirely necessary for click handler, but could be used in the future

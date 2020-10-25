@@ -49,7 +49,7 @@ export default class Nav {
             nodes[i].setAttribute("aria-expanded", "false");
         }
 
-        this.element.querySelector(article + "-node").setAttribute("aria-expanded", "true");
+        this.element.querySelector("#" + article + "-node").setAttribute("aria-expanded", "true");
     }
 
     // Updates local mini nav state, and calls function to update DOM

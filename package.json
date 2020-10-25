@@ -4,7 +4,7 @@
     "description": "ChemTAS Website",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest --watch",
         "start": "webpack-cli serve --mode development --env mode=dev",
         "build": "webpack --mode production --env mode=prod",
         "build-dev": "webpack --mode development --env mode=dev"

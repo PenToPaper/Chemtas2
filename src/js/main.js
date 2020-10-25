@@ -7,6 +7,6 @@ import ChemTAS from "./ChemTAS";
 
 // onload
 document.addEventListener("DOMContentLoaded", function (event) {
-    var chemTAS = new ChemTAS("none", "atom-evolution", json);
+    const chemTAS = new ChemTAS("none", "atom-evolution", json);
     chemTAS.init();
 });

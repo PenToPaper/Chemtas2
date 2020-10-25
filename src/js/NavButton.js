@@ -6,17 +6,21 @@ export default class NavButton {
     // onKeyDown = fired with (event, index) on key down
     // onClick = fired with (event, index) on click
     constructor(element, index, onKeyDown, onClick) {
+        // Assignments
         this.element = element;
         this.index = index;
 
+        // Bindings
         this.focus = this.focus.bind(this);
+
+        // Event Listenrs
 
         // Instead of (event), calls onKeyDown with (event, index)
         // Not entirely necessary for click handler, but could be used in the future
-        element.addEventListener("keydown", function (event) {
+        element.addEventListener("keydown", (event) => {
             return onKeyDown(event, index);
         });
-        element.addEventListener("click", function (event) {
+        element.addEventListener("click", (event) => {
             return onClick(event, index);
         });
     }

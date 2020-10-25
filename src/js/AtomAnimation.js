@@ -60,14 +60,14 @@ export default class AtomAnimation {
         }
 
         // Helper local functions for callbacks
-        var onComplete = function () {
+        const onComplete = (() => {
             this.playing = false;
             callback();
-        }.bind(this);
+        }).bind(this);
 
-        var onEnterFrame = function (event) {
+        const onEnterFrame = ((event) => {
             this.handleEnterFrame(event, transitionScientistCallback);
-        }.bind(this);
+        }).bind(this);
 
         this.playing = scientistFrom;
         this.animation.removeEventListener("enterFrame", onEnterFrame);
@@ -80,31 +80,31 @@ export default class AtomAnimation {
     }
 
     // Helper function for finding last scientist based on argument. Does not assume this.playing Returns false if there is no last scientist.
-    getLastScientist(scientistName) {
-        var currentScientistIndex = this.scientistOrder.indexOf(scientistName);
+    getPrevScientist(scientistName) {
+        const currentScientistIndex = this.scientistOrder.indexOf(scientistName);
         // Checks if we've gone below an index of 0
         if (currentScientistIndex - 1 < 0) {
             return false;
         }
-        var lastScientistIndex = currentScientistIndex - 1;
+        const lastScientistIndex = currentScientistIndex - 1;
         return this.scientistOrder[lastScientistIndex];
     }
 
     // Helper function for finding next scientist based on argument. Does not assume this.playing. Returns false if there is no next scientist.
     getNextScientist(scientistName) {
-        var currentScientistIndex = this.scientistOrder.indexOf(this.playing);
+        const currentScientistIndex = this.scientistOrder.indexOf(this.playing);
         // Checks if we've exceeded the # of scientists in the list
         if (currentScientistIndex < 0 || currentScientistIndex + 1 >= this.scientistOrder.length) {
             return false;
         }
-        var nextScientistIndex = currentScientistIndex + 1;
+        const nextScientistIndex = currentScientistIndex + 1;
         return this.scientistOrder[nextScientistIndex];
     }
 
     handleEnterFrame(event, callback) {
         if (event.direction === 1) {
             // Moving forward
-            var nextScientist = this.getNextScientist(this.playing);
+            const nextScientist = this.getNextScientist(this.playing);
 
             /**
              * Based on the model:
@@ -124,7 +124,7 @@ export default class AtomAnimation {
             }
         } else {
             // Moving backward
-            var lastScientist = this.getLastScientist(this.playing);
+            const lastScientist = this.getPrevScientist(this.playing);
 
             /**
              * Based on the model:

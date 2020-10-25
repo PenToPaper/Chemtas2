@@ -20,9 +20,9 @@ export default class Nav {
         this.handleMiniNavOpen = this.handleMiniNavOpen.bind(this);
 
         // Populate this.articleButtons with NavButton objects
-        var buttonElements = element.querySelectorAll(".timeline-node");
+        const buttonElements = element.querySelectorAll(".timeline-node");
 
-        for (var i = 0; i < buttonElements.length; i++) {
+        for (let i = 0; i < buttonElements.length; i++) {
             this.articleButtons.push(new NavButton(buttonElements[i], i, this.onButtonKeyDown, this.onButtonClick));
         }
 
@@ -31,7 +31,7 @@ export default class Nav {
         window.addEventListener("resize", this.onWindowWidth);
 
         // Bind mini nav toggle button
-        utils.collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen);
+        utils.collectionBind(element.querySelectorAll(".logo-mark-container"), "click", this.handleMiniNavOpen);
     }
 
     // When the active article changes. Element represents the button that was selected
@@ -44,12 +44,12 @@ export default class Nav {
 
     // Changes timeline node buttons from aria-expanded = "false" to aria-expanded = "true" to reflect the article currently visible
     navButtonAria(article) {
-        var nodes = document.getElementsByClassName("timeline-node");
-        for (var i = 0; i < nodes.length; i++) {
+        const nodes = this.element.querySelectorAll(".timeline-node");
+        for (let i = 0; i < nodes.length; i++) {
             nodes[i].setAttribute("aria-expanded", "false");
         }
 
-        document.getElementById(article + "-node").setAttribute("aria-expanded", "true");
+        this.element.querySelector(article + "-node").setAttribute("aria-expanded", "true");
     }
 
     // Updates local mini nav state, and calls function to update DOM
@@ -60,14 +60,11 @@ export default class Nav {
 
     // Updates the mini nav class in the dom. Called after this.miniNavOpen is updated
     handleMiniNavOpenUpdate() {
-        var body = document.getElementsByTagName("body");
-        if (body.length === 0) {
-            return false;
-        }
+        const body = document.getElementsByTagName("body");
 
         // Make sure timeline nodes are tabbable if the menu is open
-        var timelineNodes = document.getElementsByClassName("timeline-node");
-        for (var i = 0; i < timelineNodes.length; i++) {
+        const timelineNodes = this.element.querySelectorAll(".timeline-node");
+        for (let i = 0; i < timelineNodes.length; i++) {
             timelineNodes[i].setAttribute("tabindex", this.miniNavOpen ? "0" : "-1");
         }
 
@@ -77,15 +74,15 @@ export default class Nav {
         // if isCollapsedMenu is true and the mini nav is closed, output true
         // if isCollapsedMenu is true and the mini nav is open, output false
         // if isCollapsedMenu is false, output false
-        document.getElementById("nav-contents").setAttribute("aria-hidden", window.innerWidth <= 1200 && !this.miniNavOpen ? "true" : "false");
+        this.element.querySelector("#nav-contents").setAttribute("aria-hidden", window.innerWidth <= 1200 && !this.miniNavOpen ? "true" : "false");
     }
 
     // Handler for adjusting DOM based on window width.
     // Changes tabIndex on buttons, mini nav state, and aria properties of nav
     onWindowWidth() {
-        var isCollapsedMenu = window.innerWidth <= 1200;
+        const isCollapsedMenu = window.innerWidth <= 1200;
 
-        for (var i = 0; i < this.articleButtons.length; i++) {
+        for (let i = 0; i < this.articleButtons.length; i++) {
             this.articleButtons[i].tabIndex(!isCollapsedMenu);
         }
 
@@ -97,12 +94,12 @@ export default class Nav {
         // if isCollapsedMenu is true and the mini nav is closed, output true
         // if isCollapsedMenu is true and the mini nav is open, output false
         // if isCollapsedMenu is false, output false
-        document.getElementById("nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
+        this.element.querySelector("#nav-contents").setAttribute("aria-hidden", isCollapsedMenu && !this.miniNavOpen ? "true" : "false");
     }
 
     // Handles a nav button's key down event firing
     onButtonKeyDown(event, index) {
-        var stopFlag = false;
+        let stopFlag = false;
         switch (event.keyCode) {
             // 32 = space
             // 13 = enter
@@ -143,7 +140,7 @@ export default class Nav {
     }
 
     // Handles when a NavButton's onClick event fires
-    onButtonClick(event, element) {
+    onButtonClick(event) {
         this.onActiveChange(event.target.closest(".timeline-node"));
     }
 

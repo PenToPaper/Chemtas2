@@ -3,7 +3,7 @@ import utils from "./utils";
 
 // Object for entire navbar
 export default class Nav {
-    constructor(onActiveChange, element) {
+    constructor(element, onActiveChange) {
         // Callback for when the user clicks or uses keyboard to change the active article
         this.onActiveChangeCallback = onActiveChange;
         // DOM Element reference
@@ -31,7 +31,7 @@ export default class Nav {
         window.addEventListener("resize", this.onWindowWidth);
 
         // Bind mini nav toggle button
-        utils.collectionBind(element.querySelectorAll(".logo-mark-container"), "click", this.handleMiniNavOpen);
+        utils.collectionBind(document.getElementsByClassName("logo-mark-container"), "click", this.handleMiniNavOpen);
     }
 
     // When the active article changes. Element represents the button that was selected
@@ -39,17 +39,18 @@ export default class Nav {
         this.onActiveChangeCallback(element);
         this.miniNavOpen = false;
         this.handleMiniNavOpenUpdate();
-        this.navButtonAria(element.getAttribute("data-article"));
+        this.navButtonAriaExpanded(element.getAttribute("data-article"));
     }
 
     // Changes timeline node buttons from aria-expanded = "false" to aria-expanded = "true" to reflect the article currently visible
-    navButtonAria(article) {
-        const nodes = this.element.querySelectorAll(".timeline-node");
-        for (let i = 0; i < nodes.length; i++) {
-            nodes[i].setAttribute("aria-expanded", "false");
+    navButtonAriaExpanded(article) {
+        for (let i = 0; i < this.articleButtons.length; i++) {
+            if (this.articleButtons[i].element.id === article + "-node") {
+                this.articleButtons[i].ariaExpanded(true);
+            } else {
+                this.articleButtons[i].ariaExpanded(false);
+            }
         }
-
-        this.element.querySelector("#" + article + "-node").setAttribute("aria-expanded", "true");
     }
 
     // Updates local mini nav state, and calls function to update DOM
@@ -63,14 +64,17 @@ export default class Nav {
         const body = document.getElementsByTagName("body");
 
         // Make sure timeline nodes are tabbable if the menu is open
-        const timelineNodes = this.element.querySelectorAll(".timeline-node");
-        for (let i = 0; i < timelineNodes.length; i++) {
-            timelineNodes[i].setAttribute("tabindex", this.miniNavOpen ? "0" : "-1");
+        for (let i = 0; i < this.articleButtons.length; i++) {
+            this.articleButtons[i].tabIndex(this.miniNavOpen);
         }
 
         body[0].className = this.miniNavOpen ? "mini-nav-open" : "";
 
-        this.element.getElementsByClassName("logo-mark-container")[0].setAttribute("aria-expanded", this.miniNavOpen);
+        const logoMarkContainers = document.getElementsByClassName("logo-mark-container");
+        for (let i = 0; i < logoMarkContainers.length; i++) {
+            logoMarkContainers[i].setAttribute("aria-expanded", this.miniNavOpen.toString());
+        }
+
         // if isCollapsedMenu is true and the mini nav is closed, output true
         // if isCollapsedMenu is true and the mini nav is open, output false
         // if isCollapsedMenu is false, output false
@@ -82,13 +86,16 @@ export default class Nav {
     onWindowWidth() {
         const isCollapsedMenu = window.innerWidth <= 1200;
 
-        for (let i = 0; i < this.articleButtons.length; i++) {
-            this.articleButtons[i].tabIndex(!isCollapsedMenu);
-        }
-
         if (!isCollapsedMenu) {
             this.miniNavOpen = false;
             document.getElementsByTagName("body")[0].className = "";
+        }
+
+        for (let i = 0; i < this.articleButtons.length; i++) {
+            // If isCollapsedMenu is true and the mini nav is closed, output false
+            // If isCollapsedMenu is true and the mini nav is open, output true
+            // If isCollapsedMenu is false, output true
+            this.articleButtons[i].tabIndex(!isCollapsedMenu || this.miniNavOpen);
         }
 
         // if isCollapsedMenu is true and the mini nav is closed, output true

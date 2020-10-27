@@ -14,7 +14,7 @@ export default class ChemTAS {
 
         // Assigned on construction
         this.atomAnimation = new AtomAnimation(animationElementId, json);
-        this.nav = new Nav(this.handleScientistButton, document.getElementsByTagName("nav")[0]);
+        this.nav = new Nav(document.getElementsByTagName("nav")[0], this.handleScientistButton);
 
         // Dynamic
         this.activeScientist = activeScientist;

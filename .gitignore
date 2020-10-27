@@ -3,3 +3,5 @@ performance-tests/
 node_modules/
 dist/
 *.psd
+.vs/
+.vscode/

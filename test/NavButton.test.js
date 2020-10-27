@@ -37,4 +37,12 @@ describe("NavButton", () => {
         navButton.tabIndex(false);
         expect(element.setAttribute).toHaveBeenLastCalledWith("tabindex", "-1");
     });
+
+    it("Calls element's setAttribute method when aria-expanded method called", () => {
+        navButton.ariaExpanded(true);
+        expect(element.setAttribute).toHaveBeenLastCalledWith("aria-expanded", "true");
+
+        navButton.ariaExpanded(false);
+        expect(element.setAttribute).toHaveBeenLastCalledWith("aria-expanded", "false");
+    });
 });

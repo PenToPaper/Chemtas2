@@ -34,4 +34,8 @@ export default class NavButton {
     tabIndex(isTabbable) {
         return this.element.setAttribute("tabindex", isTabbable ? "0" : "-1");
     }
+
+    ariaExpanded(isExpanded) {
+        return this.element.setAttribute("aria-expanded", isExpanded.toString());
+    }
 }

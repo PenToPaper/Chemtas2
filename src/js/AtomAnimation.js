@@ -48,13 +48,16 @@ export default class AtomAnimation {
 
         // Plays the segments
         if (scientistFrom === scientistTo) {
+            // If the scientist we're going to is the same as the one we're coming from, play from that scientist's start frame to its end frame
             this.animation.playSegments([this.scientistFrames[scientistFrom][0], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][0];
         } else if (scientistFrom === "none") {
+            // If no scientist was selected previously, start from the first frame and end at the destination's end frame
             this.animation.playSegments([this.scientistFrames[this.scientistOrder[0]][0], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = 0;
             scientistFrom = this.scientistOrder[0];
         } else {
+            // If we're moving from scientist to scientist, start from the last frame of the starting scientist (to show where the model started) and end at the last frame of the ending scientist
             this.animation.playSegments([this.scientistFrames[scientistFrom][1], this.scientistFrames[scientistTo][1]], true);
             this.lastStartFrame = this.scientistFrames[scientistFrom][1];
         }
@@ -77,6 +80,8 @@ export default class AtomAnimation {
             this.animation.addEventListener("enterFrame", onEnterFrame);
             transitionScientistCallback(this.playing);
         }
+
+        return true;
     }
 
     // Helper function for finding last scientist based on argument. Does not assume this.playing Returns false if there is no last scientist.
@@ -92,7 +97,7 @@ export default class AtomAnimation {
 
     // Helper function for finding next scientist based on argument. Does not assume this.playing. Returns false if there is no next scientist.
     getNextScientist(scientistName) {
-        const currentScientistIndex = this.scientistOrder.indexOf(this.playing);
+        const currentScientistIndex = this.scientistOrder.indexOf(scientistName);
         // Checks if we've exceeded the # of scientists in the list
         if (currentScientistIndex < 0 || currentScientistIndex + 1 >= this.scientistOrder.length) {
             return false;
@@ -101,7 +106,7 @@ export default class AtomAnimation {
         return this.scientistOrder[nextScientistIndex];
     }
 
-    handleEnterFrame(event, callback) {
+    handleEnterFrame(event, newSegmentCallback) {
         if (event.direction === 1) {
             // Moving forward
             const nextScientist = this.getNextScientist(this.playing);
@@ -119,7 +124,7 @@ export default class AtomAnimation {
             if (nextScientist !== false) {
                 if (this.scientistFrames[nextScientist][0] <= this.lastStartFrame + event.currentTime) {
                     this.playing = nextScientist;
-                    callback(this.playing);
+                    newSegmentCallback(this.playing);
                 }
             }
         } else {
@@ -139,7 +144,7 @@ export default class AtomAnimation {
             if (lastScientist !== false) {
                 if (this.scientistFrames[this.playing][0] >= this.lastStartFrame - event.totalTime + event.currentTime) {
                     this.playing = lastScientist;
-                    callback(this.playing);
+                    newSegmentCallback(this.playing);
                 }
             }
         }

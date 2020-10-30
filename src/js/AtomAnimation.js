@@ -20,10 +20,10 @@ export default class AtomAnimation {
         this.scientistOrder = ["democritus", "dalton", "thomson", "rutherford", "bohr", "schrodinger"];
 
         // Assigned on construction, not changed afterwards
-        this.elementId = elementId;
+        this.element = document.getElementById(elementId);
         this.json = json;
         this.animation = bodymovin.loadAnimation({
-            container: document.getElementById(this.elementId),
+            container: this.element,
             renderer: "svg",
             loop: false,
             autoplay: false,

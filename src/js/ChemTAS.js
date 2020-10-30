@@ -15,6 +15,7 @@ export default class ChemTAS {
         // Assigned on construction
         this.atomAnimation = new AtomAnimation(animationElementId, json);
         this.nav = new Nav(document.getElementsByTagName("nav")[0], this.handleScientistButton);
+        this.atomAnimationContainer = document.getElementById(animationElementId + "-container");
 
         // Dynamic
         this.activeScientist = activeScientist;
@@ -32,41 +33,20 @@ export default class ChemTAS {
         this.atomAnimation.playFrom(prevActiveScientist, this.activeScientist, this.handleAnimationDone.bind(this), this.handleScientistTransition.bind(this));
     }
 
-    // Locks the nav from transitioning when animation is playing
-    handleNavLock() {
-        const nav = document.getElementsByTagName("nav");
-        if (nav.length === 0) {
-            return false;
-        }
-        nav[0].className = "animation-locked";
-        this.miniNavLockTimeout = setTimeout(this.handleNavUnlock.bind(this), 500);
-    }
-
-    // Unlocks the nav, called after 500ms of not resizing window
-    handleNavUnlock() {
-        const nav = document.getElementsByTagName("nav");
-        if (nav.length === 0) {
-            return false;
-        }
-        nav[0].className = "";
-    }
-
     // Handles a point in the animation where a scientist's model transitions into another scientists's model.
     // Changes animation background color
     // Changes animation header text
     handleScientistTransition(newScientist) {
-        const animation = document.getElementById(this.atomAnimation.elementId + "-container");
-        animation.className = newScientist + "-animation";
+        this.atomAnimationContainer.className = newScientist + "-animation";
         const newScientistLabel = newScientist.charAt(0).toUpperCase() + newScientist.slice(1);
-        animation.children[0].innerHTML = newScientistLabel;
+        this.atomAnimationContainer.children[0].innerHTML = newScientistLabel;
     }
 
     // Shows the animation html object
     showAnimation() {
         const onboarding = document.getElementById("onboarding");
         onboarding.className = "hidden";
-        const animation = document.getElementById(this.atomAnimation.elementId + "-container");
-        animation.className = this.activeScientist + "-animation";
+        this.atomAnimationContainer.className = this.activeScientist + "-animation";
     }
 
     // Changes the active scientist in the sidebar, making the circle filled with the appropriate color
@@ -74,7 +54,7 @@ export default class ChemTAS {
         const sidebarNodes = document.getElementsByClassName("timeline-node");
         for (let i = 0; i < sidebarNodes.length; i++) {
             sidebarNodes[i].className = sidebarNodes[i].className.replace(/\s?timeline-node-selected\s?/, "");
-            if (sidebarNodes[i].id == activeScientist + "-node") {
+            if (sidebarNodes[i].id === activeScientist + "-node") {
                 sidebarNodes[i].className = sidebarNodes[i].className + " timeline-node-selected";
             }
         }
@@ -84,7 +64,7 @@ export default class ChemTAS {
     changeActiveArticle(activeScientist) {
         const articles = document.getElementsByTagName("article");
         for (let i = 0; i < articles.length; i++) {
-            if (articles[i].id == activeScientist + "-article") {
+            if (articles[i].id === activeScientist + "-article") {
                 articles[i].className = "";
                 articles[i].setAttribute("aria-hidden", "false");
             }
@@ -102,9 +82,8 @@ export default class ChemTAS {
 
     // Hides the animation, does not remove color as animation happens
     hideAnimation() {
-        const animation = document.getElementById(this.atomAnimation.elementId + "-container");
-        const newClassName = animation.className.replace(" hidden", "");
-        animation.className = newClassName + " hidden";
+        const newClassName = this.atomAnimationContainer.className.replace(" hidden", "");
+        this.atomAnimationContainer.className = newClassName + " hidden";
     }
 
     // Event handler for animation complete, cleans up (shows active article + hides animation)
@@ -117,10 +96,5 @@ export default class ChemTAS {
             }).bind(this),
             this.delay
         );
-    }
-
-    // Init, shows the animation, initializes this.atomAnimation, binds event handlers
-    init() {
-        window.addEventListener("resize", this.handleNavLock.bind(this));
     }
 }

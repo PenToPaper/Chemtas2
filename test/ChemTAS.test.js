@@ -6,13 +6,68 @@ describe("ChemTAS", () => {
             this.focus = jest.fn();
             this.setAttribute = jest.fn();
             this.id = id;
-            this.className = "";
+            this.classes = "";
             this.addEventListener = jest.fn(this.addEvent.bind(this));
             this.events = {};
+            this.classList = {
+                add: jest.fn(this.addClass.bind(this)),
+                remove: jest.fn(this.removeClass.bind(this)),
+                list: [],
+            };
+        }
+
+        set className(name) {
+            this.classes = name;
+            this.classList.list = name.split(" ");
+        }
+
+        get className() {
+            return this.classes;
+        }
+
+        addClass(className) {
+            this.classes = this.classes + " " + className;
+            this.classList.list.push(className);
+        }
+
+        removeClass(className) {
+            this.classes = this.classes.replace(" " + className, "");
+            this.classList.list.filter((filterClass) => filterClass !== className);
         }
 
         addEvent(eventName, handler) {
             this.events[eventName] = jest.fn(handler);
+        }
+    }
+
+    class MockAnimationContainer {
+        constructor() {
+            this.classes = "hidden";
+            this.children = [{ innerHTML: "" }];
+            this.classList = {
+                add: jest.fn(this.addClass.bind(this)),
+                remove: jest.fn(this.removeClass.bind(this)),
+                list: [],
+            };
+        }
+
+        set className(name) {
+            this.classes = name;
+            this.classList.list = name.split(" ");
+        }
+
+        get className() {
+            return this.classes;
+        }
+
+        addClass(className) {
+            this.classes = this.classes + " " + className;
+            this.classList.list.push(className);
+        }
+
+        removeClass(className) {
+            this.classes = this.classes.replace(" " + className, "");
+            this.classList.list.filter((filterClass) => filterClass !== className);
         }
     }
 
@@ -87,10 +142,7 @@ describe("ChemTAS", () => {
         }),
     };
 
-    const mockAnimationContainer = {
-        className: "hidden",
-        children: [{ innerHTML: "" }],
-    };
+    const mockAnimationContainer = new MockAnimationContainer();
 
     const mockOnboarding = {
         className: "hidden",
@@ -155,7 +207,7 @@ describe("ChemTAS", () => {
         // Appropriate nav button is marked as active
         expect(navButtons[0].className).toEqual("");
         expect(navButtons[1].className).toEqual("");
-        expect(navButtons[2].className).toEqual(" timeline-node-selected");
+        expect(navButtons[2].classList.list).toEqual(["timeline-node-selected"]);
 
         // All articles are hidden
         for (let i = 0; i < articles.length; i++) {
@@ -201,7 +253,7 @@ describe("ChemTAS", () => {
         expect(mockAnimationContainer.children[0].innerHTML).toEqual("Thomson");
 
         // Appropriate nav button is marked as active
-        expect(navButtons[0].className).toEqual(" timeline-node-selected");
+        expect(navButtons[0].classList.list).toEqual(["timeline-node-selected"]);
         expect(navButtons[1].className).toEqual("");
         expect(navButtons[2].className).toEqual("");
 
@@ -229,5 +281,33 @@ describe("ChemTAS", () => {
         chemTAS.handleScientistTransition("dalton");
         expect(mockAnimationContainer.className).toEqual("dalton-animation");
         expect(mockAnimationContainer.children[0].innerHTML).toEqual("Dalton");
+    });
+
+    it("Visually hides the animation container and shows the active article after animation playback", () => {
+        jest.useFakeTimers();
+
+        chemTAS.handleAnimationDone();
+
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), chemTAS.delay);
+
+        expect(articles[0].className).toEqual("article-hidden");
+        expect(articles[0].attributes["aria-hidden"]).toEqual("true");
+        expect(articles[1].className).toEqual("article-hidden");
+        expect(articles[1].attributes["aria-hidden"]).toEqual("true");
+        expect(articles[2].className).toEqual("article-hidden");
+        expect(articles[2].attributes["aria-hidden"]).toEqual("true");
+        expect(mockAnimationContainer.classList.add).toHaveBeenCalledTimes(0);
+        expect(mockAnimationContainer.classList.list).not.toEqual(expect.arrayContaining(["hidden"]));
+
+        jest.runAllTimers();
+
+        expect(articles[0].className).toEqual("");
+        expect(articles[0].attributes["aria-hidden"]).toEqual("false");
+        expect(articles[1].className).toEqual("article-hidden");
+        expect(articles[1].attributes["aria-hidden"]).toEqual("true");
+        expect(articles[2].className).toEqual("article-hidden");
+        expect(articles[2].attributes["aria-hidden"]).toEqual("true");
+        expect(mockAnimationContainer.classList.add).toHaveBeenCalledTimes(1);
+        expect(mockAnimationContainer.classList.list).toEqual(expect.arrayContaining(["hidden"]));
     });
 });

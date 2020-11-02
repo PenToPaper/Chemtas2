@@ -1,42 +1,26 @@
 import AtomAnimation from "../src/js/AtomAnimation";
+import Bodymovin from "./MockBodymovin";
+import mockGetElement from "./mockGetElement";
 
 describe("AtomAnimation", () => {
-    class Bodymovin {
-        constructor() {
-            this.events = {};
-            this.playSegments = jest.fn();
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.removeEventListener = jest.fn(this.removeEvent.bind(this));
-        }
-
-        addEvent(eventName, handler) {
-            this.events[eventName] = handler;
-        }
-
-        removeEvent(eventName) {
-            delete this.events[eventName];
-        }
-
-        clearAllEvents() {
-            this.events = {};
-        }
-    }
-
     const bodymovinInstance = new Bodymovin();
 
     global.bodymovin = {};
-    bodymovin.loadAnimation = jest.fn((container, renderer, loop, autoplay, animationData) => {
+    bodymovin.loadAnimation = jest.fn(() => {
         return bodymovinInstance;
     });
 
-    document.getElementById = jest.fn((selector) => {
-        switch (selector) {
-            case "MockId":
-                return "MockElement";
-        }
+    document.getElementById = mockGetElement({
+        MockId: "MockElement",
     });
 
     const atomAnimation = new AtomAnimation("MockId", "MockJson");
+
+    afterAll(() => {
+        document.getElementById = () => {};
+
+        delete global.bodymovin;
+    });
 
     it("Calls loadAnimation properly on initialization", () => {
         expect(bodymovin.loadAnimation).toHaveBeenCalledTimes(1);

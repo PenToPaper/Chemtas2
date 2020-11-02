@@ -1,76 +1,32 @@
 import Nav from "../src/js/Nav";
+import MockElement from "./MockElement";
+import mockGetElement from "./mockGetElement";
 
 describe("Nav", () => {
-    class MockNavButtonElement {
-        constructor(id) {
-            this.focus = jest.fn();
-            this.setAttribute = jest.fn();
-            this.id = id;
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.events = {};
-        }
+    const navButtons = [new MockElement("democritus-node"), new MockElement("dalton-node"), new MockElement("thomson-node")];
+    const logoMarkContainers = [new MockElement(""), new MockElement(""), new MockElement("")];
+    const navContents = new MockElement("");
 
-        addEvent(eventName, handler) {
-            this.events[eventName] = jest.fn(handler);
-        }
-    }
+    const body = new MockElement("");
+    body.className = "MockClass";
 
-    class MockLogoMarkContainer {
-        constructor() {
-            this.events = {};
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.setAttribute = jest.fn();
-        }
-
-        addEvent(eventName, handler) {
-            this.events[eventName] = jest.fn(handler);
-        }
-    }
-
-    const navButtons = [new MockNavButtonElement("democritus-node"), new MockNavButtonElement("dalton-node"), new MockNavButtonElement("thomson-node")];
-    const logoMarkContainers = [new MockLogoMarkContainer(), new MockLogoMarkContainer(), new MockLogoMarkContainer()];
-
-    const navContents = {
-        setAttribute: jest.fn(),
-    };
-
-    const body = {
-        className: "MockClass",
-    };
-
-    const element = {
-        querySelectorAll: jest.fn((selector) => {
-            switch (selector) {
-                case ".timeline-node":
-                    return navButtons;
-            }
-        }),
-        querySelector: jest.fn((selector) => {
-            switch (selector) {
-                case "#nav-contents":
-                    return navContents;
-            }
-        }),
-        getElementsByClassName: jest.fn((selector) => {
-            switch (selector) {
-                case "logo-mark-container":
-                    return logoMarkContainers;
-            }
-        }),
-    };
-
-    document.getElementsByClassName = jest.fn((selector) => {
-        switch (selector) {
-            case "logo-mark-container":
-                return logoMarkContainers;
-        }
+    const element = new MockElement("");
+    element.querySelectorAll = mockGetElement({
+        ".timeline-node": navButtons,
+    });
+    element.querySelector = mockGetElement({
+        "#nav-contents": navContents,
+    });
+    element.getElementsByClassName = mockGetElement({
+        "logo-mark-container": logoMarkContainers,
     });
 
-    document.getElementsByTagName = jest.fn((selector) => {
-        switch (selector) {
-            case "body":
-                return [body];
-        }
+    document.getElementsByClassName = mockGetElement({
+        "logo-mark-container": logoMarkContainers,
+    });
+
+    document.getElementsByTagName = mockGetElement({
+        body: [body],
     });
 
     window.addEventListener = jest.fn();
@@ -78,6 +34,12 @@ describe("Nav", () => {
     const onActiveChange = jest.fn();
 
     const nav = new Nav(element, onActiveChange);
+
+    afterAll(() => {
+        document.getElementsByTagName = () => {};
+        document.getElementsByClassName = () => {};
+        window.addEventListener = () => {};
+    });
 
     it("Binds onWindowWidth on init", () => {
         expect(window.addEventListener).toHaveBeenLastCalledWith("resize", nav.onWindowWidth);

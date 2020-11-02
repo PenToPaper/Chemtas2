@@ -1,27 +1,21 @@
 import NavButton from "../src/js/NavButton";
+import MockElement from "./MockElement";
 
 describe("NavButton", () => {
-    const eventListeners = {};
-    const element = {
-        addEventListener: jest.fn((eventName, callback) => {
-            eventListeners[eventName] = callback;
-        }),
-        focus: jest.fn(),
-        setAttribute: jest.fn(),
-    };
+    const element = new MockElement();
     const onKeyDown = jest.fn();
     const onClick = jest.fn();
     const navButton = new NavButton(element, 2, onKeyDown, onClick);
 
     it("Binds event handlers on initialization", () => {
-        expect(Object.keys(eventListeners)).toHaveLength(2);
-        expect(typeof eventListeners["keydown"] === "function").toEqual(true);
-        expect(typeof eventListeners["click"] === "function").toEqual(true);
+        expect(Object.keys(element.events)).toHaveLength(2);
+        expect(typeof element.events["keydown"] === "function").toEqual(true);
+        expect(typeof element.events["click"] === "function").toEqual(true);
 
-        eventListeners["keydown"]("MockEvent");
+        element.events["keydown"]("MockEvent");
         expect(onKeyDown).toHaveBeenCalledWith("MockEvent", 2);
 
-        eventListeners["click"]("MockEvent");
+        element.events["click"]("MockEvent");
         expect(onKeyDown).toHaveBeenCalledWith("MockEvent", 2);
     });
 

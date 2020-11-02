@@ -1,188 +1,64 @@
 import ChemTAS from "../src/js/ChemTAS";
+import MockElement from "./MockElement";
+import Bodymovin from "./MockBodymovin";
+import mockGetElement from "./mockGetElement";
 
 describe("ChemTAS", () => {
-    class MockNavButtonElement {
-        constructor(id) {
-            this.focus = jest.fn();
-            this.setAttribute = jest.fn();
-            this.id = id;
-            this.classes = "";
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.events = {};
-            this.classList = {
-                add: jest.fn(this.addClass.bind(this)),
-                remove: jest.fn(this.removeClass.bind(this)),
-                list: [],
-            };
-        }
-
-        set className(name) {
-            this.classes = name;
-            this.classList.list = name.split(" ");
-        }
-
-        get className() {
-            return this.classes;
-        }
-
-        addClass(className) {
-            this.classes = this.classes + " " + className;
-            this.classList.list.push(className);
-        }
-
-        removeClass(className) {
-            this.classes = this.classes.replace(" " + className, "");
-            this.classList.list.filter((filterClass) => filterClass !== className);
-        }
-
-        addEvent(eventName, handler) {
-            this.events[eventName] = jest.fn(handler);
-        }
-    }
-
-    class MockAnimationContainer {
-        constructor() {
-            this.classes = "hidden";
-            this.children = [{ innerHTML: "" }];
-            this.classList = {
-                add: jest.fn(this.addClass.bind(this)),
-                remove: jest.fn(this.removeClass.bind(this)),
-                list: [],
-            };
-        }
-
-        set className(name) {
-            this.classes = name;
-            this.classList.list = name.split(" ");
-        }
-
-        get className() {
-            return this.classes;
-        }
-
-        addClass(className) {
-            this.classes = this.classes + " " + className;
-            this.classList.list.push(className);
-        }
-
-        removeClass(className) {
-            this.classes = this.classes.replace(" " + className, "");
-            this.classList.list.filter((filterClass) => filterClass !== className);
-        }
-    }
-
-    class MockLogoMarkContainer {
-        constructor() {
-            this.events = {};
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.setAttribute = jest.fn();
-        }
-
-        addEvent(eventName, handler) {
-            this.events[eventName] = jest.fn(handler);
-        }
-    }
-
-    class Bodymovin {
-        constructor() {
-            this.events = {};
-            this.playSegments = jest.fn();
-            this.addEventListener = jest.fn(this.addEvent.bind(this));
-            this.removeEventListener = jest.fn(this.removeEvent.bind(this));
-        }
-
-        addEvent(eventName, handler) {
-            this.events[eventName] = handler;
-        }
-
-        removeEvent(eventName) {
-            delete this.events[eventName];
-        }
-
-        clearAllEvents() {
-            this.events = {};
-        }
-    }
-
-    class MockArticle {
-        constructor(id) {
-            this.id = id + "-article";
-            this.className = "";
-            this.attributes = {};
-            this.setAttribute = jest.fn(this.setAttribute.bind(this));
-        }
-
-        setAttribute(attribute, value) {
-            this.attributes[attribute] = value;
-        }
-    }
-
-    const articles = [new MockArticle("democritus"), new MockArticle("dalton"), new MockArticle("thomson")];
-
-    const navButtons = [new MockNavButtonElement("democritus-node"), new MockNavButtonElement("dalton-node"), new MockNavButtonElement("thomson-node")];
-
-    const navContents = {
-        setAttribute: jest.fn(),
-    };
-
-    const logoMarkContainers = [new MockLogoMarkContainer(), new MockLogoMarkContainer(), new MockLogoMarkContainer()];
-
-    const mockNav = {
-        querySelectorAll: jest.fn((selector) => {
-            switch (selector) {
-                case ".timeline-node":
-                    return navButtons;
-            }
-        }),
-        querySelector: jest.fn((selector) => {
-            switch (selector) {
-                case "#nav-contents":
-                    return navContents;
-            }
-        }),
-    };
-
-    const mockAnimationContainer = new MockAnimationContainer();
-
-    const mockOnboarding = {
-        className: "hidden",
-    };
-
-    document.getElementsByTagName = jest.fn((selector) => {
-        switch (selector) {
-            case "nav":
-                return [mockNav];
-            case "article":
-                return articles;
-        }
-    });
-
-    document.getElementsByClassName = jest.fn((selector) => {
-        switch (selector) {
-            case "logo-mark-container":
-                return logoMarkContainers;
-            case "timeline-node":
-                return navButtons;
-        }
-    });
-
-    document.getElementById = jest.fn((selector) => {
-        switch (selector) {
-            case "MockId-container":
-                return mockAnimationContainer;
-            case "onboarding":
-                return mockOnboarding;
-        }
-    });
-
+    // Mock DOM
+    const articles = [new MockElement("democritus-article"), new MockElement("dalton-article"), new MockElement("thomson-article")];
+    const navButtons = [new MockElement("democritus-node"), new MockElement("dalton-node"), new MockElement("thomson-node")];
+    const navContents = new MockElement("");
+    const logoMarkContainers = [new MockElement(""), new MockElement(""), new MockElement("")];
     const bodymovinInstance = new Bodymovin();
 
+    const mockNav = new MockElement("");
+    mockNav.querySelectorAll = mockGetElement({
+        ".timeline-node": navButtons,
+    });
+    mockNav.querySelector = mockGetElement({
+        "#nav-contents": navContents,
+    });
+
+    const mockAnimationContainer = new MockElement("");
+    mockAnimationContainer.children[0] = new MockElement("");
+    mockAnimationContainer.className = "hidden";
+
+    const mockOnboarding = new MockElement("");
+
+    // Mock environment
+
+    document.getElementsByTagName = mockGetElement({
+        nav: [mockNav],
+        article: articles,
+    });
+
+    document.getElementsByClassName = mockGetElement({
+        "logo-mark-container": logoMarkContainers,
+        "timeline-node": navButtons,
+    });
+
+    document.getElementById = mockGetElement({
+        "MockId-container": mockAnimationContainer,
+        onboarding: mockOnboarding,
+    });
+
+    // Mock bodymovin
+
     global.bodymovin = {};
-    bodymovin.loadAnimation = jest.fn((container, renderer, loop, autoplay, animationData) => {
+    bodymovin.loadAnimation = jest.fn(() => {
         return bodymovinInstance;
     });
 
+    // Tested object
     const chemTAS = new ChemTAS("none", "MockId", "MockJson");
+
+    afterAll(() => {
+        document.getElementsByTagName = () => {};
+        document.getElementsByClassName = () => {};
+        document.getElementById = () => {};
+
+        delete global.bodymovin;
+    });
 
     // Assert on initial state
     it("Properly assigns local state on initialization", () => {

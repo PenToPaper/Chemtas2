@@ -1,18 +1,9 @@
 import utils from "../src/js/utils";
+import MockElement from "./MockElement";
 
 describe("collectionBind", () => {
-    class MockElement {
-        constructor() {
-            this.events = {};
-            this.addEventListener.bind(this);
-        }
-
-        addEventListener(eventType, handler) {
-            this.events[eventType] = handler;
-        }
-    }
     const handler = jest.fn();
-    const collection = [new MockElement(), new MockElement(), new MockElement()];
+    const collection = [new MockElement(""), new MockElement(""), new MockElement("")];
 
     it("Binds an event handler for each element in a collection", () => {
         utils.collectionBind(collection, "click", handler);

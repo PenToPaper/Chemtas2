@@ -47,10 +47,21 @@ module.exports = {
             },
             {
                 include: /assets/,
+                exclude: /assets\\favicons/,
                 test: /\.(png|jpe?g|gif|svg|xml|webmanifest|ico)$/i,
                 loader: "file-loader",
                 options: {
                     name: "[path][name][contenthash].[ext]",
+                    context: "src",
+                },
+            },
+            // For favicons in particular. Unique hashes could not be reflected in html easily
+            {
+                include: /assets\\favicons/,
+                test: /\.(png|jpe?g|gif|svg|xml|webmanifest|ico)$/i,
+                loader: "file-loader",
+                options: {
+                    name: "[path][name]_1.[ext]",
                     context: "src",
                 },
             },
